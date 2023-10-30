@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 95%;
+}
+
+.card {
+    background-color: #FFF0EB;
+}
+
+.iframe {
+    width: 100%;
+    height: auto;
+}

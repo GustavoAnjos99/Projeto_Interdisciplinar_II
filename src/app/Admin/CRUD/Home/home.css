@@ -1,0 +1,35 @@
+.titulo{
+    margin: 80px auto;
+    text-align: center;
+}
+
+.submit, .cancel{
+  margin-top: 40px;
+  margin-bottom: 20px;
+  background: #ffd6c8de;
+  border-radius: 100px;
+  border: 1px solid #ffd6c8de;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.search {
+    margin-top: 40px;
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 100px;
+  border: 1px solid #ffd6c8de;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.submit:hover, .cancel:hover {
+  background: #f1b5a0;
+  border: 1px solid #f1b5a0;
+}
