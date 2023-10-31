@@ -12,6 +12,7 @@ import NovoCliente from './app/Admin/CRUD/NovoCliente/novocliente.jsx';
 import EditarCliente from './app/Admin/CRUD/EditarCliente/editarcliente.jsx';
 import MeuPerfil from './app/Client/perfil-usuario/MeuPerfil.jsx';
 import { Dashboard } from './app/Admin/Dashboard/Dashboard.jsx';
+import Chats from './app/Chats/Chats.jsx';
 
 
 function App(){
@@ -28,7 +29,8 @@ function App(){
       <SecureRoute exact path='/app/admin/editarcliente/:id' component={EditarCliente} allowedUserType="admin"/>
       <SecureRoute exact path='/app/admin/gerenciamento-clientes' component={Home} allowedUserType="admin"/>
         
-      <SecureRoute exact path='/app/meu-perfil' component={MeuPerfil} allowedUserType="cliente"/>
+        <SecureRoute exact path='/app/meu-perfil' component={MeuPerfil} allowedUserType="cliente" />
+        <SecureRoute exact path='/app/novo-pedido' component={Chats} allowedUserType="cliente"/>
       </Switch>
     </BrowserRouter>;
   }

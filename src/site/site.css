@@ -71,11 +71,11 @@ header {
   padding: 0;
 }
 
-input, button {
+input, button, label {
   border: none;
   outline: none;
   background: none;
-  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-family: "Nunito Sans", Helvetica, Arial, sans-serif;
 }
 
 .cont {
