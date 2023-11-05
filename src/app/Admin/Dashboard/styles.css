@@ -5,11 +5,33 @@
     width: 95%;
 }
 
-.card {
+.card-frame {
+    left: 10%;
     background-color: #FFF0EB;
+}
+
+.status {
+        background-color: #FFF0EB;
+
+}
+
+.box-servico .card {
+    margin-top: 50px;
+    background-color: #4c2b1756;
+    left: 5%;
+    height: 80vh;
 }
 
 .iframe {
     width: 100%;
     height: auto;
 }
+
+.intro-cards {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5%;
+}
+

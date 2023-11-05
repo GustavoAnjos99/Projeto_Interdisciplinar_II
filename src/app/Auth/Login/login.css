@@ -117,3 +117,30 @@ input, .input {
   border: 1px solid #f1b5a0;
 }
 
+@media (min-width: 425px) and (max-width: 1024px){
+    .form-signin {
+      width: 80%;
+    }
+
+    .container-fluid {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+}
+
+@media (max-width: 425px) {
+    .form-signin, .form-container {
+      width: 90%;
+      margin-top: 50vh;
+      margin: auto;
+    }
+    .login-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    .login-links a {
+      font-size: 16px;
+    }
+}

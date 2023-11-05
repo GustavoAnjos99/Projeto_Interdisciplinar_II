@@ -1,52 +1,43 @@
-import { Menu } from "../../../site/Components/menu";
-import { Pedido } from "../Pedido/Pedido";
+import React, { useContext, useEffect, useState } from "react";
+import Navbar from "../../Components/Navbar/navbar";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import { AuthContext } from "../../Auth/Context/auth"; // Importe o contexto AuthContext aqui
 
 function MeuPerfil() {
+  const [userName, setUserName] = useState(""); // Estado para armazenar o nome do usuário
+  const { userID, logado, userType } = useContext(AuthContext); // Use o useContext com o contexto AuthContext
+
+  useEffect(() => {
+    async function LoadUserName() {
+      try {
+        if (logado && userType === "cliente") {
+          const db = firebase.firestore();
+          const UsuarioRef = db.collection("usuarios").doc(userID);
+          const Usuario = await UsuarioRef.get();
+          const username = Usuario.data().nomecompleto;
+
+          setUserName(username);
+        } else {
+          console.log("Algo deu errado.");
+        }
+      } catch (error) {
+        console.error("Erro ao carregar o nome do usuário:", error);
+      }
+    }
+
+    LoadUserName();
+  }, [userID, logado, userType]); // Certifique-se de incluir userID, logado e userType como dependências
+
   return (
     <>
-      <Menu/>
-    <main>
-      <div className="container">
-        <div className="row">
-          <div className="col">
-            <Pedido
-              id={1}
-              titulo="Pedido 509829"
-              itens={["100 unidades de Beijinho", "100 unidades de Brigadeiro"]}
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col">
-            <Pedido
-              id={2}
-              titulo="Pedido 509830"
-              itens={["100 unidades de Beijinho", "100 unidades de Brigadeiro", "Buffet Completo"]}
-            />
-          </div>
-        </div>
-
-        <Pedido
-          id={3}
-          titulo="Pedido 509831"
-          itens={["100 unidades de Beijinho", "100 unidades de Brigadeiro", "150 mini hotdogs"]}
-        />
-
-        <Pedido
-          id={4}
-          titulo="Pedido 509832"
-          itens={["100 unidades de Beijinho", "100 unidade de Bicho de pé", "Cascata de Chocolate", "100 unidades de Brigadeiro"]}
-        />
-
-        <Pedido
-          id={5}
-          titulo="Pedido 509833"
-          itens={["100 unidades de Beijinho", "100 unidades de Brigadeiro", "Carrinho de Crepe Suiço", "250 mini Pizzas"]}
-        />
-      </div>
-      </main>
-      </>
+      <Navbar />
+      <h1
+        style={{ fontSize: "36px", textAlign: "center", marginTop: 20 + "px" }}
+      >
+        Bem vindo(a), {userName}!
+      </h1>
+    </>
   );
 }
 

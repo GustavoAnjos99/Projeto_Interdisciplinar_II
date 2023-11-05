@@ -33,3 +33,9 @@
   background: #f1b5a0;
   border: 1px solid #f1b5a0;
 }
+
+.cont table {
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  height: 60vh;
+}

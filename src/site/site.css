@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200;6..12,300&family=Oooh+Baby&display=swap');
 
+*, *:before, *:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
   background-image: url('../../public/assets/background.png');
@@ -9,7 +15,23 @@ header {
   z-index: 20;
   position: static;
   height: 120px;
-  margin-bottom: 160px;
+  margin-bottom: 200px;
+}
+
+h1, h2, h3 {
+  font-family: 'Oooh Baby', cursive;
+  font-size: 30px;
+}
+
+p, h4, h5, h6, em, label, span {
+  font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
+}
+
+em {
+  font-weight: bolder;
+}
+.features-box .icon {
+  color: #4c2b178f;
 }
 
   .navbar-nav {
@@ -18,6 +40,7 @@ header {
     align-items: center;
     text-align: center;
   }
+
     .logotipo {
     width: 150px;
     display: flex;
@@ -64,12 +87,6 @@ header {
     float: left;
     margin-left: 1em;
     }
-
-*, *:before, *:after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 input, button, label {
   border: none;
@@ -237,6 +254,7 @@ padding: 50px 0;
     width: 100%;
 }
 
+
 .btn-banner{
     margin: 8% 3% 5% 0;
 }
@@ -251,7 +269,7 @@ padding: 50px 0;
 }
 
 #avaliacoes{
-    background-color: rgba(255,240,235,255);
+    background-color: rgba(255,206,209,255);
     color: #201f1f;
     padding: 2% 5%;
     text-align: center;
@@ -267,9 +285,20 @@ padding: 50px 0;
     margin-top: 10%;
 }
 
-#servicos{
-    padding: 5% 15% 8%;
-    color:#000000;
+#servicos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  gap: 50px;
+}
+
+.box-servicos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 40px auto;
 }
 
 #footer{
@@ -281,4 +310,44 @@ padding: 50px 0;
 #icon {
     color: #070707;
     margin-bottom: 15px;
+}
+
+@media screen and (max-width: 924px) {
+    .button__div{ 
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .button_div .button {
+      display: flex;
+      flex-grow: 5;
+    }
+    .container {
+      flex-wrap: wrap;
+      flex-direction: column;
+    }
+
+    .box-servicos {
+      width: 100%;
+    }
+
+    .box-servico {
+      width: 100%;
+      margin: 20px auto;
+    }
+
+    .logotipo {
+    width: 45vw;
+    height: 20vh;
+    display: flex;
+    float: left;
+    margin-left: 1em;
+    }
+    .navbar-toggler {
+      width: 30vw;
+    }
+      .navbar-collapse {
+      height: 25vh;
+      overflow-y: scroll;
+  }
 }
