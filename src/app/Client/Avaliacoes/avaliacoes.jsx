@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import Navbar from "../../Components/Navbar/navbar";
+import SweetAlert from "react-bootstrap-sweetalert";
+import { useParams } from "react-router-dom";
 
-function Avaliacoes(props) {
-  const [userId, setUserId] = useState("");
+function Avaliacoes() {
+  const { id } = useParams();
+  // const [userId, setUserId] = useState(userIdProp);
   const [pedidos, setPedidos] = useState([]);
   const [avaliacao, setAvaliacao] = useState("");
   const [avaliacaoSelecionada, setAvaliacaoSelecionada] = useState("");
@@ -15,8 +18,7 @@ function Avaliacoes(props) {
       const db = firebase.firestore();
 
       db.collection("Pedidos")
-        .where("userid", "==", userId)
-        .doc(props.match.params.id)
+        .where("userid", "==", id)
         .get()
         .then((querySnapshot) => {
           const pedidosData = querySnapshot.docs.map((doc) => ({
@@ -31,7 +33,7 @@ function Avaliacoes(props) {
     };
 
     fetchPedidos();
-  }, [userId]);
+  }, [id]);
 
   const handleAvaliacaoChange = (event) => {
     const pedidoId = event.target.value;
@@ -45,8 +47,9 @@ function Avaliacoes(props) {
       const db = firebase.firestore();
       const { id, avaliacao } = pedidoSelecionado;
 
+      // Atualiza o pedido com as informações alteradas no Firebase
       db.collection("Pedidos")
-        .doc(props.match.params.id)
+        .doc()
         .update({ avaliacao })
         .then(() => {
           console.log("Pedido atualizado com sucesso!");

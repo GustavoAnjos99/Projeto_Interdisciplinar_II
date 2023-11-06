@@ -73,7 +73,7 @@ function App() {
         />
         <SecureRoute
           exact
-          path="/app/avaliacoes"
+          path="/app/avaliar-pedidos"
           component={Avaliacoes}
           allowedUserType="cliente"
         />

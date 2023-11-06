@@ -10,7 +10,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [sucesso, setSucesso] = useState("");
-  const { setLogado, userType } = useContext(AuthContext);
+  const { setLogado, userType, adminUserID, userID } = useContext(AuthContext);
 
   function LoginUsuario() {
     firebase
@@ -79,10 +79,10 @@ function Login() {
               E-mail ou senha inválida.
             </div>
           ) : null}
-          {sucesso === "S" && userType === "admin" ? (
+          {sucesso === "S" && adminUserID === userID ? (
             <Redirect to="/app/admin/home" />
           ) : null}
-          {sucesso === "S" && userType === "cliente" ? (
+          {sucesso === "S" && userID !== adminUserID ? (
             <Redirect to="/app/meu-perfil" />
           ) : null}
 

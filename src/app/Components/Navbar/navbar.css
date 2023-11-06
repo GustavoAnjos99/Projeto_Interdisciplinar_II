@@ -5,3 +5,11 @@
 .navbar .logout{
     cursor: pointer;
 }
+
+.nav-link {
+    text-transform: uppercase;
+}
+
+.nav-link button {
+    border-radius: 50px;
+}

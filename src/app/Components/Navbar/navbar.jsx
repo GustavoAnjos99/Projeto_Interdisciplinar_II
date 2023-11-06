@@ -66,6 +66,11 @@ function Navbar() {
               {userType === "cliente" && logado && (
                 <>
                   <li className="nav-item">
+                    <Link to="/app/meu-perfil" className="nav-link">
+                      Meu Perfil
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <Link to="/app/novo-pedido" className="nav-link">
                       Novo Pedido
                     </Link>

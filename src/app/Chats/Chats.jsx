@@ -40,10 +40,20 @@ export default function Chats() {
     ));
   }
 
+  function handleAvancar() {
+    setMostrarProximasOpcoes(true);
+    return opcoesDesejadas.map((opcao) => {
+      <div key={opcao} className="opcao">
+        {opcao}
+        <div className="quantidade"></div>
+      </div>;
+    });
+  }
+
   return (
     <>
       <Navbar />
-      <h1 style={{ fontSize: "26px" }}>Novo pedido</h1>
+      <h1 style={{ fontSize: "48px", textAlign: "center" }}>Novo pedido</h1>
       <div className="container">
         {mostrarProximasOpcoes ? (
           <div className="menu_opcoes">

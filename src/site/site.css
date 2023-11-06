@@ -269,15 +269,15 @@ padding: 50px 0;
 }
 
 #avaliacoes{
-    background-color: rgba(255,206,209,255);
+    background-color: rgb(255, 218, 220);
     color: #201f1f;
     padding: 2% 5%;
     text-align: center;
     }
 
 #avaliacoes img{
-    border-radius: 50%;
-    width: 10%;
+    width: 100px;
+    height: 100px;
     margin: 20px;
 }
 
@@ -300,6 +300,7 @@ padding: 50px 0;
   justify-content: center;
   margin: 40px auto;
 }
+
 
 #footer{
     padding: 3% 15%;
@@ -331,9 +332,11 @@ padding: 50px 0;
       width: 100%;
     }
 
-    .box-servico {
+    .box-servico .card-body {
       width: 100%;
       margin: 20px auto;
+      display: flex;
+      flex-direction: column;
     }
 
     .logotipo {
