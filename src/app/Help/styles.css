@@ -1,0 +1,67 @@
+main {
+    background-color: #ffd9cb;
+    margin: 5%;
+    text-align: center;
+    margin-top: 0;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+
+.dados {
+    display: inline;
+    margin-bottom: 200px;
+}
+
+textarea {
+    width: 80%;
+    height: 200px;
+    resize: none;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255,240,235,255);
+}
+textarea:focus {
+    outline: none !important;
+    border: #4C2B17;
+}
+
+button {
+    background-color: #4c2b1756;
+    border: none;
+}
+
+button:hover {
+    border: 1px solid #4C2B17;
+}
+
+header {
+    margin-bottom: 100px;
+}
+
+@media (max-width: 500px){
+    main {
+        margin: 0;
+    }
+
+    button {
+        margin: 0px;
+        border-radius: 5px;
+        width: 100%;
+    }
+    
+    textarea {
+        margin: 0px;
+        width: 100%;
+    }
+
+    h4 {
+        font-size:medium;
+    }
+
+    header {
+        margin-bottom: 140px;
+    }
+    
+}

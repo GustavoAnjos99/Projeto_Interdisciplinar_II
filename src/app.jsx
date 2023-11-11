@@ -12,10 +12,10 @@ import NovoCliente from "./app/Admin/CRUD/NovoCliente/novocliente.jsx";
 import EditarCliente from "./app/Admin/CRUD/EditarCliente/editarcliente.jsx";
 import MeuPerfil from "./app/Client/perfil-usuario/MeuPerfil.jsx";
 import { Dashboard } from "./app/Admin/Dashboard/Dashboard.jsx";
-import Chats from "./app/Chats/Chats.jsx";
-import Ajuda from "./app/Ajuda/Ajuda.jsx";
 import GerenciarPedidos from "./app/Admin/GerenciarPedidos/GerenciarPedidos.jsx";
 import Avaliacoes from "./app/Client/Avaliacoes/avaliacoes.jsx";
+import Ajuda from "./app/Help/Ajuda.jsx";
+import ChatContainer from "./app/Chatbot/ChatContainer.jsx";
 
 function App() {
   return (
@@ -68,7 +68,7 @@ function App() {
         <SecureRoute
           exact
           path="/app/novo-pedido"
-          component={Chats}
+          component={ChatContainer}
           allowedUserType="cliente"
         />
         <SecureRoute

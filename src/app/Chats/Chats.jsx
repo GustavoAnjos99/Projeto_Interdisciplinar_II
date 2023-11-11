@@ -1,147 +1,66 @@
 import React, { useState } from "react";
+import { Menu } from "../../site/Components/menu";
 import "./styles.css";
-import Ketlyn from "./assets/Perfil.png";
-import Navbar from "../Components/Navbar/navbar";
+import { HandleOpcao, HandleOpcoes, ShowOpcoes } from "./Utils/UtilFunctions";
+
+import BoasVindas from "./Components/BoasVindas";
+import SelecaoOpcoes from "./Components/SelecaoOpcoes";
+import Envio from "./Components/Envio";
+import SelecaoQuantidade from "./Components/SubcomponenteQuantidade";
 
 export default function Chats() {
   const [conteudoPedido, setConteudoPedido] = useState([]);
   const [mostrarProximasOpcoes, setMostrarProximasOpcoes] = useState(false);
   const [opcoesDesejadas, setOpcoesDesejadas] = useState([]);
   const [ultimaOpcaoDesejada, setUltimaOpcaoDesejada] = useState("");
+  const [quantidades, setQuantidades] = useState([]);
+  const [quantidadeSelecionada, setQuantidadeSelecionada] = useState("");
 
-  function handleOpcao(opcaoDesejada) {
-    setUltimaOpcaoDesejada(opcaoDesejada);
-    setOpcoesDesejadas([...opcoesDesejadas, opcaoDesejada]);
-    setConteudoPedido([...conteudoPedido, opcaoDesejada]);
+  function handleSelecionarCategoria(categoria) {
+    setUltimaOpcaoDesejada(categoria);
     setMostrarProximasOpcoes(true);
   }
 
-  function handleOpcoes(event) {
-    event.preventDefault();
-    const opcoesSelecionadas = document.querySelectorAll(
-      "input[type=checkbox]:checked"
-    );
-    setOpcoesDesejadas([...opcoesDesejadas, ...opcoesSelecionadas]);
-    setConteudoPedido([...conteudoPedido, ...opcoesSelecionadas]);
-    setMostrarProximasOpcoes(true);
+  // Função para selecionar a quantidade
+  function handleSelecionarQuantidade(quantidade) {
+    setQuantidadeSelecionada(quantidade);
   }
 
   function handleVoltar() {
     setOpcoesDesejadas([]);
-    setUltimaOpcaoDesejada("");
+
+    if (ultimaOpcaoDesejada !== "") {
+      const novoConteudoPedido = conteudoPedido.filter(
+        (item) => item !== ultimaOpcaoDesejada
+      );
+      setConteudoPedido(novoConteudoPedido);
+    }
     setMostrarProximasOpcoes(false);
-  }
-
-  function handleMostrarOpcoes() {
-    return opcoesDesejadas.map((opcao) => (
-      <div key={opcao} className="opcao">
-        {opcao}
-      </div>
-    ));
-  }
-
-  function handleAvancar() {
-    setMostrarProximasOpcoes(true);
-    return opcoesDesejadas.map((opcao) => {
-      <div key={opcao} className="opcao">
-        {opcao}
-        <div className="quantidade"></div>
-      </div>;
-    });
   }
 
   return (
     <>
-      <Navbar />
-      <h1 style={{ fontSize: "48px", textAlign: "center" }}>Novo pedido</h1>
+      <Menu />
+      <h1 className="title">Novo pedido</h1>
       <div className="container">
-        {mostrarProximasOpcoes ? (
-          <div className="menu_opcoes">
-            <div className="intro">
-              <img src={Ketlyn} alt="Ketlyn" className="img__perfil" />
-              <p className="text">
-                {ultimaOpcaoDesejada === "Bolos"
-                  ? "Você escolheu Bolos. Confeitamos bolos personalizados com personagens ou flores com papelaria de luxo. Confira as opções abaixo!"
-                  : "Selecione os itens desejados."}
-              </p>
-            </div>
-            {ultimaOpcaoDesejada === "Bolos" ? (
-              <form>
-                <div className="btn__opcoes">
-                  <input
-                    type="checkbox"
-                    name="Bolos Personalizados"
-                    id="Bolos Personalizados"
-                    className="checkbox"
-                  />
-                  <label className="opcao" htmlFor="Bolos Personalizados">
-                    Bolos Personalizados
-                  </label>
-                  <input
-                    type="checkbox"
-                    name="Bolos Comuns"
-                    id="Bolos Comuns"
-                    className="checkbox"
-                  />
-                  <label className="opcao" htmlFor="Bolos Comuns">
-                    Bolos Comuns
-                  </label>
-                </div>
-                <div className="send">
-                  {mostrarProximasOpcoes && (
-                    <button className="voltar" onClick={handleVoltar}>
-                      <i
-                        className="icone fa-solid fa-rotate-left fa-2xl"
-                        style={{ color: "#ffffff" }}
-                      ></i>
-                    </button>
-                  )}
-                  <button
-                    type="submit"
-                    className="opcao"
-                    onClick={handleOpcoes}
-                  >
-                    Próximo
-                  </button>
-                </div>
-              </form>
-            ) : (
-              handleMostrarOpcoes()
-            )}
-          </div>
-        ) : (
-          <div className="menu_opcoes">
-            <div className="intro">
-              <img src={Ketlyn} alt="Ketlyn" className="img__perfil" />
-              <p className="text">
-                Olá, seja bem-vindo(a)! Selecione o que deseja adicionar ao seu
-                pedido!
-              </p>
-            </div>
-            <div className="btn__opcoes">
-              <button className="opcao" onClick={() => handleOpcao("Bolos")}>
-                Bolos
-              </button>
-              <button className="opcao" onClick={() => handleOpcao("Doces")}>
-                Doces
-              </button>
-              <button className="opcao" onClick={() => handleOpcao("Salgados")}>
-                Salgados
-              </button>
-              <button
-                className="opcao"
-                onClick={() => handleOpcao("Mini Lanches")}
-              >
-                Mini Lanches
-              </button>
-              <button
-                className="opcao"
-                onClick={() => handleOpcao("Serviços de Buffet")}
-              >
-                Serviços de Buffet
-              </button>
-            </div>
-          </div>
+        {ultimaOpcaoDesejada === "" && !mostrarProximasOpcoes && (
+          <BoasVindas handleOpcao={handleSelecionarCategoria} />
+        )}
+        {ultimaOpcaoDesejada !== "" && mostrarProximasOpcoes && (
+          <SelecaoOpcoes
+            opcaoDesejada={ultimaOpcaoDesejada}
+            handleOpcao={HandleOpcao}
+          />
+        )}
+        {ultimaOpcaoDesejada !== "" && !mostrarProximasOpcoes && (
+          <SelecaoQuantidade
+            quantidades={quantidades}
+            handleSelecionarQuantidade={handleSelecionarQuantidade}
+            quantidadeSelecionada={quantidadeSelecionada}
+          />
+        )}
+        {ultimaOpcaoDesejada !== "" && mostrarProximasOpcoes && quantidades && (
+          <Envio conteudoPedido={conteudoPedido} />
         )}
       </div>
     </>
