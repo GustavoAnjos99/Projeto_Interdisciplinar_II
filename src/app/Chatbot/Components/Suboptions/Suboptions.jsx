@@ -2,65 +2,87 @@ import React, { useState } from "react";
 import "./styles.css";
 
 export const SubOptions = (props) => {
-  const { selectedOption, handleSubOption } = props;
-  const [selectedSubOptions, setSelectedSubOptions] = useState([]);
+  const [selectedSuboption, setSelectedSuboption] = useState([]);
 
-  const subOptions = {
-    Bolos: ["Bolo Personalizado", "Bolo Comum"],
-    Doces: [
-      "Brigadeiro",
-      "Beijinho",
-      "Cajuzinho",
-      "Brigadeiro de Nutella",
-      "Brigadeiro de Paçoca",
-      "Bicho de Pé",
-      "Cascata de Chocolate",
-    ],
-    Salgados: [
-      "Coxinha",
-      "Bolinho de Queijo",
-      "Bolinho de Carne",
-      "Esfiha de Carne",
-      "Esfiha de Calabresa",
-      "Esfiha de Frango",
-      "Risole",
-      "Quibe",
-      "Crepe Suíço",
-    ],
-    MiniLanches: ["Mini HotDog", "Mini Hamburguer"],
-    Buffet: ["Buffet Completo"],
+  const handleSuboption = (id) => {
+    setSelectedSuboption(id);
+    switch (id) {
+      case 1:
+        props.actionProvider.handleTiposBolos();
+        break;
+      case 2:
+        props.actionProvider.handleTiposDoces();
+        break;
+      case 3:
+        props.actionProvider.handleTiposSalgados();
+        break;
+      case 4:
+        props.actionProvider.handleTipoMiniLanches();
+        break;
+      case 5:
+        props.actionProvider.handleTipoBuffet();
+        break;
+      default:
+        break;
+    }
   };
 
-  const handleCheckboxChange = (value) => {
-    const updatedSubOptions = selectedSubOptions.includes(value)
-      ? selectedSubOptions.filter((option) => option !== value)
-      : [...selectedSubOptions, value];
+  const suboptions = [
+    {
+      texts: ["Bolo Personalizado", "Bolo Comum"],
+      handler: props.actionProvider.handleTiposBolos,
+      id: 1,
+    },
+    {
+      texts: [
+        "Brigadeiro",
+        "Beijinho",
+        "Brigadeiro de Paçoca",
+        "Bicho de Pé",
+        "Brigadeiro de Nutella",
+        "Brigadeiro de Ninho",
+        "Brigadeiro de Churros",
+        "Cascata de Chocolate",
+      ],
+      handler: props.actionProvider.handleTiposDoces,
+      id: 2,
+    },
+    {
+      texts: [
+        "Coxinha",
+        "Bolinha de Queijo",
+        "Bolinha de Carne",
+        "Esfiha de Carne",
+        "Esfiha de Frango",
+        "Esfiha de Calabresa",
+        "Quibe",
+        "Crepe Suíço",
+      ],
+      handler: props.actionProvider.handleTiposSalgados,
+      id: 3,
+    },
+    {
+      texts: ["Mini Hambúrguer", "Mini Hotdog"],
+      handler: props.actionProvider.handleTiposMiniLanches,
+      id: 4,
+    },
+    {
+      text: "Serviços de Buffet",
+      handler: props.actionProvider.handleTiposBuffet,
+      id: 5,
+    },
+  ];
 
-    setSelectedSubOptions(updatedSubOptions);
-  };
-
-  const handleContinue = () => {
-    handleSubOption(selectedSubOptions);
-  };
-
-  const checkboxesMarkup =
-    subOptions[selectedOption]?.map((option) => (
-      <div key={option} className="checkbox-container">
-        <input
-          type="checkbox"
-          id={option}
-          value={option}
-          checked={selectedSubOptions.includes(option)}
-          onChange={() => handleCheckboxChange(option)}
-        />
-        <label htmlFor={option}>{option}</label>
-      </div>
-    )) || null;
-
-  return (
-    <div className="sub-options-container">
-      {checkboxesMarkup}
-      <button onClick={handleContinue}>Continuar</button>
+  const buttonsMarkup = suboptions.map((suboption) => (
+    <div key={suboption.id}>
+      {suboption.texts &&
+        suboption.texts.map((text, index) => (
+          <button key={index} className="option-button" disabled>
+            {text}
+          </button>
+        ))}
     </div>
-  );
+  ));
+
+  return <div className="options-container">{buttonsMarkup}</div>;
 };

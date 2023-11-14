@@ -4,6 +4,9 @@ import Chat from "./Chat";
 import { createChatBotMessage } from "react-chatbot-kit";
 
 const ChatContainer = () => {
+  const config = {
+    customActionProvider: new ActionProvider(createChatBotMessage),
+  };
   const [chatbotState, setChatbotState] = useState({
     messages: [],
   });

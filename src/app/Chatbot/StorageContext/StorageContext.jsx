@@ -6,7 +6,10 @@ export const EscolhaProvider = ({ children }) => {
   const [escolha, setEscolha] = useState({
     opcao: null,
     subOpcoes: [],
+    quantidades: [],
   });
+
+  const [messages, setMessages] = useState([]);
 
   const setOpcao = (opcao) => {
     setEscolha((prevEscolha) => ({ ...prevEscolha, opcao }));
@@ -16,8 +19,25 @@ export const EscolhaProvider = ({ children }) => {
     setEscolha((prevEscolha) => ({ ...prevEscolha, subOpcoes }));
   };
 
+  const setQuantidades = (quantidades) => {
+    setEscolha((prevEscolha) => ({ ...prevEscolha, quantidades }));
+  };
+
+  const sendMessage = (message) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  };
+
   return (
-    <EscolhaContext.Provider value={{ escolha, setOpcao, setSubOpcoes }}>
+    <EscolhaContext.Provider
+      value={{
+        escolha,
+        setOpcao,
+        setSubOpcoes,
+        setQuantidades,
+        messages,
+        sendMessage,
+      }}
+    >
       {children}
     </EscolhaContext.Provider>
   );

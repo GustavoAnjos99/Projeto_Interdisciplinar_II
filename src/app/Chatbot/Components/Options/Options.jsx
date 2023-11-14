@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./styles.css";
-import { SubOptions } from "../Suboptions/Suboptions";
 
 export const Options = (props) => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -61,20 +60,11 @@ export const Options = (props) => {
       key={option.id}
       onClick={() => handleOptionClick(option.id)}
       className="option-button"
+      disabled
     >
       {option.text}
     </button>
   ));
 
-  return (
-    <div className="options-container">
-      {buttonsMarkup}
-      {selectedOption && (
-        <SubOptions
-          actionProvider={props.actionProvider}
-          selectedOption={selectedOption}
-        />
-      )}
-    </div>
-  );
+  return <div className="options-container">{buttonsMarkup}</div>;
 };
