@@ -4,7 +4,7 @@ import "./styles.css";
 export const Options = (props) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
-  const handleOptionClick = (id) => {
+  const handleOption = (id) => {
     setSelectedOption(id);
     switch (id) {
       case 1:
@@ -25,6 +25,7 @@ export const Options = (props) => {
       default:
         break;
     }
+    props.onSelectOption(id);
   };
 
   const options = [
@@ -56,12 +57,7 @@ export const Options = (props) => {
   ];
 
   const buttonsMarkup = options.map((option) => (
-    <button
-      key={option.id}
-      onClick={() => handleOptionClick(option.id)}
-      className="option-button"
-      disabled
-    >
+    <button key={option.id} className="option-button" disabled>
       {option.text}
     </button>
   ));

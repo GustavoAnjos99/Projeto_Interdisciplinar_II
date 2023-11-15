@@ -1,8 +1,6 @@
 class MessageParser {
-    constructor(actionProvider, handleQuantidadeChange, handleAdicionarQuantidade) {
+    constructor(actionProvider) {
     this.actionProvider = actionProvider;
-    this.handleQuantidadeChange = handleQuantidadeChange;
-    this.handleAdicionarQuantidade = handleAdicionarQuantidade;
   }
 
   parse(message) {
@@ -34,7 +32,7 @@ class MessageParser {
     }
 
     const selectedSuboption = knownSubOptions.find((suboption) =>
-      suboption.keywords.some(keyword => lowercase.includes(keyword))
+      suboption.keywords.some((keyword) => lowercase.includes(keyword))
     );
 
     if (selectedSuboption) {

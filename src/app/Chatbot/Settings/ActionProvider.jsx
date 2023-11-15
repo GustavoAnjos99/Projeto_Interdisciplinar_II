@@ -1,3 +1,4 @@
+import { connect } from "react-redux";
 class ActionProvider {
   constructor(createChatBotMessage, setStateFunc, addOpcoesFunc) {
     this.createChatBotMessage = createChatBotMessage;
@@ -165,9 +166,6 @@ class ActionProvider {
   };
 
   handleTiposDoces = () => {
-    if (this.getDocesSuboptions) {
-      this.selectedSuboptions.push(...this.getDocesSuboptions());
-    }
     const selectedDocesTexts = Array.isArray(this.selectedSuboptions)
       ? this.selectedSuboptions.map((option) => option.text)
       : [];
@@ -213,7 +211,7 @@ class ActionProvider {
       : [];
 
     const message = this.createChatBotMessage(
-      `Delicioso! Você escolheu os seguintes doces: ${selectedMiniLanchesTexts.join(
+      `Delicioso! Você escolheu os seguintes lanchinhos: ${selectedMiniLanchesTexts.join(
         ", "
       )}. Agora escolha a quantidade necessária para os lanches escolhidos.`,
       {
@@ -252,4 +250,16 @@ class ActionProvider {
   };
 }
 
+const mapStateToProps = (state) => ({
+  pedido: state.pedido,
+  opcoes: state.opcoes,
+  subopcoes: state.subopcoes,
+  quantidades: state.quantidades,
+  observacoes: state.observacoes,
+});
+
+const ConnectedActionProvider = connect(mapStateToProps)(ActionProvider);
+
 export { ActionProvider };
+
+export default ConnectedActionProvider;

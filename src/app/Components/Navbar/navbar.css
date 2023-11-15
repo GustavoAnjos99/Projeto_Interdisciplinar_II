@@ -2,6 +2,10 @@
     background-color: rgba(255,240,235,255);
 }
 
+.menu {
+    width: 100%;
+}
+
 .navbar .logout{
     cursor: pointer;
 }

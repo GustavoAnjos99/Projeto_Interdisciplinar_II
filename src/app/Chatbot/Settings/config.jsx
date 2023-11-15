@@ -1,5 +1,5 @@
 import React from "react";
-import { createChatBotMessage } from "react-chatbot-kit";
+import { createChatBotMessage, createCustomMessage } from "react-chatbot-kit";
 
 import { Options } from "../Components/Options/Options.jsx";
 import { GetBolos } from "../Components/Suboptions/GetBolos.jsx";
@@ -7,7 +7,7 @@ import { GetDoces } from "../Components/Suboptions/GetDoces.jsx";
 import { GetSalgados } from "../Components/Suboptions/GetSalgados.jsx";
 import { GetMiniLanches } from "../Components/Suboptions/GetMiniLanches.jsx";
 import { GetBuffet } from "../Components/Suboptions/GetBuffet.jsx";
-import { Quantidade } from "../Components/Quantidade/Quantidade.jsx";
+import { PedidoProvider } from "../StorageContext/PedidoContext.jsx";
 const config = {
   botName: "Ateliê do Chocolate",
   initialMessages: [
@@ -17,7 +17,11 @@ const config = {
         widget: "options",
       }
     ),
+    createCustomMessage(),
   ],
+  customElements: {
+    pedidoContext: (props) => <PedidoProvider {...props} />,
+  },
   widgets: [
     {
       widgetName: "options",
@@ -42,10 +46,6 @@ const config = {
     {
       widgetName: "suboptionsBuffet",
       widgetFunc: (props) => <GetBuffet {...props} />,
-    },
-    {
-      widgetName: "quantidade",
-      widgetFunc: (props) => <Quantidade {...props} />,
     },
   ],
 };

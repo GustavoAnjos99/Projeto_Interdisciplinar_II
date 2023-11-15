@@ -18,13 +18,5 @@ export const Quantidade = (props) => {
     setQuantidade(quantidades, props.categoria);
   };
 
-  return (
-    <div className="options-container">
-      {props.suboptions.map((subItem) => (
-        <button key={subItem.id} disabled>
-          {subItem.text}
-        </button>
-      ))}
-    </div>
-  );
+  return;
 };
