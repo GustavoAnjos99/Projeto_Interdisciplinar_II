@@ -1,6 +1,8 @@
 class MessageParser {
-  constructor(actionProvider) {
+    constructor(actionProvider, handleQuantidadeChange, handleAdicionarQuantidade) {
     this.actionProvider = actionProvider;
+    this.handleQuantidadeChange = handleQuantidadeChange;
+    this.handleAdicionarQuantidade = handleAdicionarQuantidade;
   }
 
   parse(message) {
@@ -27,7 +29,7 @@ class MessageParser {
     );
 
     if (selectedOption) {
-      this.actionProvider[`handle${selectedOption.keyword.charAt(0).toUpperCase()}${selectedOption.keyword.slice(1)}`](selectedOption.id);
+      this.actionProvider[`handle${selectedOption.keyword.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('')}`](selectedOption.id);
       return;
     }
 

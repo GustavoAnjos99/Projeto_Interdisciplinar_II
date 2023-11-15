@@ -15,7 +15,7 @@ import { Dashboard } from "./app/Admin/Dashboard/Dashboard.jsx";
 import GerenciarPedidos from "./app/Admin/GerenciarPedidos/GerenciarPedidos.jsx";
 import Avaliacoes from "./app/Client/Avaliacoes/avaliacoes.jsx";
 import Ajuda from "./app/Help/Ajuda.jsx";
-import ChatContainer from "./app/Chatbot/ChatContainer.jsx";
+import Chat from "./app/Chatbot/Chat.jsx";
 
 function App() {
   return (
@@ -68,7 +68,7 @@ function App() {
         <SecureRoute
           exact
           path="/app/novo-pedido"
-          component={ChatContainer}
+          component={Chat}
           allowedUserType="cliente"
         />
         <SecureRoute

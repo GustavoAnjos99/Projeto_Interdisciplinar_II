@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { usePedido } from "../../StorageContext/StorageContext";
 import "./styles.css";
 
 export const SubOptions = (props) => {
   const [selectedSuboption, setSelectedSuboption] = useState([]);
+  const { pedido, setPedido } = usePedido();
 
   const handleSuboption = (id) => {
     setSelectedSuboption(id);
