@@ -1,22 +1,83 @@
 import React, { useState } from "react";
-import { ActionProvider } from "../../Settings/ActionProvider";
-import "./styles.css";
+import { usePedidoContext } from "../../StorageContext/PedidoContext";
 
 export const Quantidade = (props) => {
-  const { setQuantidade } = new ActionProvider();
-  const [quantidades, setQuantidades] = useState({});
+  const {
+    opcoes,
+    subopcoes,
+    quantidades,
+    setQuantidades,
+    pedido,
+    setPedido,
+    mapearOpcoesComSubopcoes,
+  } = usePedidoContext();
 
-  const handleQuantidadeChange = (itemId, event) => {
-    const newQuantidades = {
-      ...quantidades,
-      [itemId]: Number(event.target.value),
-    };
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleAddClick = (subopcao) => {
+    const newQuantidades = { ...quantidades };
+
+    if (newQuantidades[subopcao] === undefined) {
+      newQuantidades[subopcao] = 1;
+    } else {
+      newQuantidades[subopcao] += 1;
+    }
+
     setQuantidades(newQuantidades);
   };
 
-  const handleAdicionarQuantidade = () => {
-    setQuantidade(quantidades, props.categoria);
+  const handleRemoveClick = (subopcao) => {
+    const newQuantidades = { ...quantidades };
+
+    if (
+      newQuantidades[subopcao] !== undefined &&
+      newQuantidades[subopcao] > 0
+    ) {
+      newQuantidades[subopcao] -= 1;
+      setQuantidades(newQuantidades);
+    }
   };
 
-  return;
+  const handleContinueClick = (quantidade) => {
+    setQuantidades({ ...quantidades, quantidade });
+    setCurrentIndex((prevIndex) => prevIndex + 1);
+  };
+
+  const handleSendClick = () => {
+    setPedido(mapearOpcoesComSubopcoes(...opcoes, subopcoes, quantidades));
+    console.log(pedido);
+    props.actionProvider.handleBuffet();
+  };
+
+  return (
+    <div className="options-container">
+      {currentIndex < subopcoes.length && (
+        <div key={subopcoes[currentIndex]}>
+          <button disabled>{subopcoes[currentIndex]}</button>
+          <button onClick={() => handleAddClick(subopcoes[currentIndex])}>
+            +
+          </button>
+          <div className="quantidade">
+            <input
+              type="text"
+              value={quantidades[subopcoes[currentIndex]] || 0}
+              disabled
+            />
+          </div>
+
+          <button onClick={() => handleRemoveClick(subopcoes[currentIndex])}>
+            -
+          </button>
+        </div>
+      )}
+      {currentIndex === subopcoes.length - 1 && (
+        <button className="submit-button" onClick={handleSendClick}>
+          Próximo
+        </button>
+      )}
+      {currentIndex < subopcoes.length - 1 && (
+        <button onClick={handleContinueClick}>Continuar</button>
+      )}
+    </div>
+  );
 };

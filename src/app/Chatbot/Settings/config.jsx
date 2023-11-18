@@ -8,6 +8,8 @@ import { GetSalgados } from "../Components/Suboptions/GetSalgados.jsx";
 import { GetMiniLanches } from "../Components/Suboptions/GetMiniLanches.jsx";
 import { GetBuffet } from "../Components/Suboptions/GetBuffet.jsx";
 import { PedidoProvider } from "../StorageContext/PedidoContext.jsx";
+import { Quantidade } from "../Components/Quantidade/Quantidade.jsx";
+import { EnviarPedido } from "../Components/EnviarPedido/EnviarPedido.jsx";
 const config = {
   botName: "Ateliê do Chocolate",
   initialMessages: [
@@ -46,6 +48,14 @@ const config = {
     {
       widgetName: "suboptionsBuffet",
       widgetFunc: (props) => <GetBuffet {...props} />,
+    },
+    {
+      widgetName: "quantidades",
+      widgetFunc: (props) => <Quantidade {...props} />,
+    },
+    {
+      widgetName: "confirmarPedido",
+      widgetFunc: (props) => <EnviarPedido {...props} />,
     },
   ],
 };

@@ -4,7 +4,10 @@ import { MessageParser } from "./Settings/MessageParser";
 import { config as chatbotConfig } from "./Settings/config";
 import Chat from "./Chat";
 import { createChatBotMessage } from "react-chatbot-kit";
-import { PedidoProvider, usePedido } from "./StorageContext/PedidoContext";
+import {
+  PedidoProvider,
+  usePedidoContext,
+} from "./StorageContext/PedidoContext";
 
 const ChatContainer = () => {
   const [chatbotState, setChatbotState] = useState({
@@ -23,7 +26,16 @@ const ChatContainer = () => {
     setChatbotState
   );
 
-  const { setPedido } = usePedido();
+  const {
+    pedido,
+    setPedido,
+    opcoes,
+    setOpcoes,
+    subopcoes,
+    setSubopcoes,
+    addOpcoes,
+    addSubopcoes,
+  } = usePedidoContext();
 
   const messageParser = new MessageParser(actionProvider, {
     setPedido,

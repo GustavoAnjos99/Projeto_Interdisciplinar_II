@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import { usePedido } from "../../StorageContext/StorageContext";
+import { usePedidoContext } from "../../StorageContext/PedidoContext";
 import "./styles.css";
 
 export const SubOptions = (props) => {
-  const [selectedSuboption, setSelectedSuboption] = useState([]);
-  const { pedido, setPedido } = usePedido();
+  const [selectedSuboption, setSelectedSuboption] = useState(null);
+  const {
+    opcoes,
+    subopcoes,
+    setSubopcoes,
+    pedido,
+    setPedido,
+  } = usePedidoContext();
 
   const handleSuboption = (id) => {
     setSelectedSuboption(id);
@@ -79,7 +85,13 @@ export const SubOptions = (props) => {
     <div key={suboption.id}>
       {suboption.texts &&
         suboption.texts.map((text, index) => (
-          <button key={index} className="option-button" disabled>
+          <button
+            key={index}
+            className={`option-button ${
+              selectedSuboption === index ? "selected" : ""
+            }`}
+            onClick={handleSuboption(index)}
+          >
             {text}
           </button>
         ))}

@@ -1,33 +1,40 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 
-const PedidoContext = createContext();
+const PedidoContext = createContext({});
 
-export function usePedidoContext() {
-  return useContext(PedidoContext);
-}
+export const PedidoProvider = ({ children }) => {
+  const [opcoes, setOpcoes] = useState([]);
+  const [subopcoes, setSubopcoes] = useState([]);
+  const [quantidades, setQuantidades] = useState({});
+  const [pedido, setPedido] = useState([]);
 
-export function PedidoProvider({ children }) {
-  const [itensPedido, setItensPedido] = useState([]);
-
-  const adicionarItemAoPedido = (item) => {
-    setItensPedido([...itensPedido, item]);
+  const optionSelected = () => {
+    return opcoes[opcoes.length - 1];
   };
 
-  const removerItemDoPedido = (index) => {
-    const novoPedido = [...itensPedido];
-    novoPedido.splice(index, 1);
-    setItensPedido(novoPedido);
+  const values = {
+    pedido,
+    setPedido,
+    opcoes,
+    setOpcoes,
+    subopcoes,
+    setSubopcoes,
+    optionSelected,
+    quantidades,
+    setQuantidades,
   };
 
   return (
-    <PedidoContext.Provider
-      value={{
-        itensPedido,
-        adicionarItemAoPedido,
-        removerItemDoPedido,
-      }}
-    >
-      {children}
-    </PedidoContext.Provider>
+    <PedidoContext.Provider value={values}>{children}</PedidoContext.Provider>
   );
-}
+};
+
+export const usePedidoContext = () => {
+  const context = useContext(PedidoContext);
+  if (!context) {
+    throw new Error(
+      "usePedidoContext deve ser usado dentro de um PedidoProvider"
+    );
+  }
+  return context;
+};

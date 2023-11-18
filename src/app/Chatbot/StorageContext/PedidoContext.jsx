@@ -1,25 +1,33 @@
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 
-const PedidoContext = createContext();
+const PedidoContext = createContext({});
 
 export const PedidoProvider = ({ children }) => {
-  const [pedido, setPedido] = useState({});
-  const [opcoes, setOpcoes] = useState({});
-  const [subopcoes, setSubopcoes] = useState({});
+  const [opcoes, setOpcoes] = useState([]);
+  const [subopcoes, setSubopcoes] = useState([]);
+  const [quantidades, setQuantidades] = useState({});
+  const [pedido, setPedido] = useState([]);
 
-  const addOpcoes = (opcao) => {
-    setPedido((prevPedido) => ({
-      ...prevPedido,
-      opcoes: [...prevPedido.opcoes, opcao],
-    }));
+  const optionSelected = () => {
+    return opcoes[opcoes.length - 1];
   };
+  const mapearOpcoesComSubopcoes = (opcoes, subopcoes, quantidades) => {
+    // Verificar se opcoes é um array
+    if (!Array.isArray(opcoes)) {
+      console.error("Opcoes não é um array.");
+      return [];
+    }
 
-  const addSubopcoes = (subopcao, quantidade) => {
-    setPedido((prevPedido) => ({
-      ...prevPedido,
-      subopcoes: [...prevPedido.subopcoes, subopcao],
-      quantidades: [...prevPedido.quantidades, quantidade],
-    }));
+    return opcoes.map((opcao) => {
+      const subopcoesDaOpcao = subopcoes
+        .filter((subopcao) => subopcao.opcao === opcao)
+        .map((subopcao) => ({
+          subopcao: subopcao.subopcao,
+          quantidade: quantidades[subopcao.subopcao] || 0,
+        }));
+
+      return { opcao, subopcoes: subopcoesDaOpcao };
+    });
   };
 
   const values = {
@@ -29,8 +37,10 @@ export const PedidoProvider = ({ children }) => {
     setOpcoes,
     subopcoes,
     setSubopcoes,
-    addOpcoes,
-    addSubopcoes,
+    optionSelected,
+    quantidades,
+    setQuantidades,
+    mapearOpcoesComSubopcoes,
   };
 
   return (
@@ -39,7 +49,7 @@ export const PedidoProvider = ({ children }) => {
 };
 
 export const usePedidoContext = () => {
-  const context = React.useContext(PedidoContext);
+  const context = useContext(PedidoContext);
   if (!context) {
     throw new Error(
       "usePedidoContext deve ser usado dentro de um PedidoProvider"

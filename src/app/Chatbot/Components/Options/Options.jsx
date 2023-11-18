@@ -1,63 +1,73 @@
-import React, { useState } from "react";
+import React from "react";
+import { usePedidoContext } from "../../StorageContext/PedidoContext";
 import "./styles.css";
 
 export const Options = (props) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const { opcoes, setOpcoes, pedido, setPedido } = usePedidoContext();
 
   const handleOption = (id) => {
-    setSelectedOption(id);
     switch (id) {
       case 1:
         props.actionProvider.handleBolos();
+        setOpcoes([...opcoes, "Bolos"]);
+        setPedido([...opcoes, "Bolos"]);
         break;
       case 2:
         props.actionProvider.handleDoces();
+        setOpcoes([...opcoes, "Doces"]);
+        setPedido([...opcoes, "Doces"]);
         break;
       case 3:
         props.actionProvider.handleSalgados();
+        setOpcoes([...opcoes, "Salgados"]);
+        setPedido([...opcoes, "Salgados"]);
         break;
       case 4:
         props.actionProvider.handleMiniLanches();
+        setOpcoes([...opcoes, "Mini Lanches"]);
+        setPedido([...opcoes, "Mini Lanches"]);
         break;
       case 5:
         props.actionProvider.handleBuffet();
+        setOpcoes([...opcoes, "Buffet"]);
+        setPedido([...opcoes, "Buffet"]);
         break;
       default:
         break;
     }
-    props.onSelectOption(id);
+    console.log(opcoes);
+    console.log(pedido);
   };
 
   const options = [
     {
       text: "Bolos",
-      handler: props.actionProvider.handleBolos,
       id: 1,
     },
     {
       text: "Doces",
-      handler: props.actionProvider.handleDoces,
       id: 2,
     },
     {
       text: "Salgados",
-      handler: props.actionProvider.handleSalgados,
       id: 3,
     },
     {
       text: "Mini Lanches",
-      handler: props.actionProvider.handleMiniLanches,
       id: 4,
     },
     {
       text: "Serviços de Buffet",
-      handler: props.actionProvider.handleBuffet,
       id: 5,
     },
   ];
 
   const buttonsMarkup = options.map((option) => (
-    <button key={option.id} className="option-button" disabled>
+    <button
+      key={option.id}
+      className="option-button"
+      onClick={() => handleOption(option.id)}
+    >
       {option.text}
     </button>
   ));

@@ -19,8 +19,8 @@ function Banner() {
             <h4 className="text">Entre em contato para maiores informações.</h4>
             <div className="button__div">
               {logado && userType === "cliente" ? (
-                <SecureRoute allowedUserType="cliente" to="/app/cliente/home">
-                  <Link to="/app/cliente/home" className="button">
+                <SecureRoute allowedUserType="cliente" to="/app/meu-perfil">
+                  <Link to="/app/meu-perfil" className="button">
                     Página Inicial
                   </Link>
                 </SecureRoute>

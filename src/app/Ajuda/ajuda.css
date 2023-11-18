@@ -40,9 +40,6 @@ button:hover {
     border: 1px solid #4C2B17;
 }
 
-header {
-    margin-bottom: 100px;
-}
 
 @media (max-width: 500px){
     main {

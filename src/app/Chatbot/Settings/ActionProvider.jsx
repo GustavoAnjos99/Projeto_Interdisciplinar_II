@@ -1,43 +1,8 @@
-import { connect } from "react-redux";
 class ActionProvider {
-  constructor(createChatBotMessage, setStateFunc, addOpcoesFunc) {
+  constructor(createChatBotMessage, setStateFunc, subopcoes) {
     this.createChatBotMessage = createChatBotMessage;
     this.setState = setStateFunc;
-    this.handle = {
-      Bolos: this.handleBolos,
-      Doces: this.handleDoces,
-      Salgados: this.handleSalgados,
-      Lanches: this.handleMiniLanches,
-      Buffet: this.handleBuffet,
-    };
-
-    this.selectedSuboptions = [];
-    this.selectedQuantidade = [];
   }
-
-  setQuantidade = (quantidadeDesejada, categoria) => {
-    this.selectedQuantidade.push({ quantidadeDesejada, categoria });
-
-    switch (categoria) {
-      case "Bolos":
-        this.handleTiposBolos();
-        break;
-      case "Doces":
-        this.handleTiposDoces();
-        break;
-      case "Salgados":
-        this.handleTiposSalgados();
-        break;
-      case "MiniLanches":
-        this.handleTiposMiniLanches();
-        break;
-      case "Buffet":
-        this.handleTiposBuffet();
-        break;
-      default:
-        console.error(`Categoria desconhecida: ${categoria}`);
-    }
-  };
 
   getBolosSuboptions = () => {
     return [
@@ -145,23 +110,25 @@ class ActionProvider {
     this.addMessageToState(message);
   };
 
-  handleTiposBolos = () => {
-    if (this.getBolosSuboptions) {
-      this.selectedSuboptions.push(...this.getBolosSuboptions());
-    }
-    const selectedBolosTexts = Array.isArray(this.selectedSuboptions)
-      ? this.selectedSuboptions.map((option) => option.text)
-      : [];
-
+  handleTiposBolos = (subopcoes) => {
     const message = this.createChatBotMessage(
-      `Delicioso! Você escolheu os seguintes tipos de bolos: ${selectedBolosTexts.join(
-        ", "
-      )}. Agora escolha a quantidade necessária para os itens escolhidos.`,
+      `Delicioso! Agora, determine as quantidades necessárias para cada item escolhido:`,
       {
-        widget: "quantidade",
+        widget: "quantidades",
+        options: subopcoes,
       }
     );
+    this.addMessageToState(message);
+  };
 
+  handleEnviarPedido = (pedido) => {
+    const message = this.createChatBotMessage(
+      `Itens adicionados! Você deseja adicionar mais itens ao seu pedido?`,
+      {
+        widget: "confirmarPedido",
+        options: pedido,
+      }
+    );
     this.addMessageToState(message);
   };
 
@@ -250,16 +217,4 @@ class ActionProvider {
   };
 }
 
-const mapStateToProps = (state) => ({
-  pedido: state.pedido,
-  opcoes: state.opcoes,
-  subopcoes: state.subopcoes,
-  quantidades: state.quantidades,
-  observacoes: state.observacoes,
-});
-
-const ConnectedActionProvider = connect(mapStateToProps)(ActionProvider);
-
 export { ActionProvider };
-
-export default ConnectedActionProvider;
