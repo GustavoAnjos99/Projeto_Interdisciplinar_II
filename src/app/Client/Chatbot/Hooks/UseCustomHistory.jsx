@@ -2,22 +2,24 @@ import { usePedidoContext } from "../Context/ChatContext";
 
 const UseCustomHistory = () => {
   const {
-    conteudoPedido,
-    setConteudoPedido,
-    opcoesDesejadas,
-    setOpcoesDesejadas,
-    subopcoesDesejadas,
-    setSubopcoesDesejadas,
+    opcoesPrimarias,
+    subopcoes,
     quantidades,
-    setQuantidades,
-    observacoes,
-    setObservacoes,
-    optionChoice,
-    handleVoltar,
-    setVoltar,
+    selectedOpcaoId,
+    setSelectedOpcaoId,
+    selectedSubopcoes,
+    setSelectedSubopcoes,
   } = usePedidoContext();
 
-  const voltar = () => {};
+  const voltar = () => {
+    if (subopcoes) {
+      setSelectedOpcaoId(0);
+      setSelectedSubopcoes([]);
+      console.log(selectedSubopcoes);
+      return opcoesPrimarias;
+    } else if (quantidades) {
+    }
+  };
 
   return { voltar };
 };

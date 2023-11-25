@@ -7,9 +7,8 @@ main {
     padding: 15px;
 }
 
-input {
+.ajuda__input {
     width: 250px;
-    margin-left: calc(50% - 125px);
 }
 
 .dados {
@@ -17,7 +16,7 @@ input {
     margin-bottom: 200px;
 }
 
-textarea {
+.ajuda__textarea {
     width: 80%;
     height: 200px;
     resize: none;
@@ -26,17 +25,17 @@ textarea {
     border-radius: 5px;
     background-color: rgba(255,240,235,255);
 }
-textarea:focus {
+.ajuda__textarea:focus {
     outline: none !important;
     border: #4C2B17;
 }
 
-button {
+.ajuda__button {
     background-color: #4c2b1756;
     border: none;
 }
 
-button:hover {
+.ajuda__button:hover {
     border: 1px solid #4C2B17;
 }
 
@@ -46,13 +45,13 @@ button:hover {
         margin: 0;
     }
 
-    button {
+    .ajuda__button {
         margin: 0px;
         border-radius: 5px;
         width: 100%;
     }
     
-    textarea {
+    .ajuda__textarea {
         margin: 0px;
         width: 100%;
     }

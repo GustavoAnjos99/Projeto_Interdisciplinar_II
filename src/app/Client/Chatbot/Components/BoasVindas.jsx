@@ -3,7 +3,7 @@ import Ketlyn from "../assets/Perfil.png";
 import { usePedidoContext } from "../Context/ChatContext";
 
 export default function BoasVindas() {
-  const { optionChoice } = usePedidoContext();
+  const { setSelectedOpcaoId } = usePedidoContext();
   return (
     <>
       <div className="menu_opcoes">
@@ -18,7 +18,7 @@ export default function BoasVindas() {
           <button
             className="botao"
             onClick={() => {
-              optionChoice("Bolos");
+              setSelectedOpcaoId(1);
             }}
           >
             Bolos
@@ -26,15 +26,7 @@ export default function BoasVindas() {
           <button
             className="botao"
             onClick={() => {
-              optionChoice("Doces");
-            }}
-          >
-            Doces
-          </button>
-          <button
-            className="botao"
-            onClick={() => {
-              optionChoice("Salgados");
+              setSelectedOpcaoId(2);
             }}
           >
             Salgados
@@ -42,7 +34,15 @@ export default function BoasVindas() {
           <button
             className="botao"
             onClick={() => {
-              optionChoice("Mini Lanches");
+              setSelectedOpcaoId(3);
+            }}
+          >
+            Doces
+          </button>
+          <button
+            className="botao"
+            onClick={() => {
+              setSelectedOpcaoId(4);
             }}
           >
             Mini Lanches
@@ -50,7 +50,7 @@ export default function BoasVindas() {
           <button
             className="botao"
             onClick={() => {
-              optionChoice("Serviços de Buffet");
+              setSelectedOpcaoId(5);
             }}
           >
             Serviços de Buffet

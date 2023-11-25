@@ -40,10 +40,17 @@ function MeuPerfil() {
             .orderBy("dataPedido", "desc")
             .limit(1)
             .get();
-          const pedidosData = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+          const pedidosData = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+              id: doc.id,
+              ...data,
+              dataPedido:
+                data.dataPedido && data.dataPedido.toDate
+                  ? data.dataPedido.toDate()
+                  : null,
+            };
+          });
 
           setPedidos(pedidosData);
         } else {
@@ -86,7 +93,7 @@ function MeuPerfil() {
                       : "Nenhum item"}
                   </td>
 
-                  <td>{pedido.dataPedido.toDate().toLocaleString()}</td>
+                  <td>{pedido.dataPedido}</td>
                   <td>{pedido.status}</td>
                 </tr>
               ))}

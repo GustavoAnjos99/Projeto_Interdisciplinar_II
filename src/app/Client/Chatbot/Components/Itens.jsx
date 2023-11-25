@@ -2,38 +2,45 @@ import React from "react";
 import { usePedidoContext } from "../Context/ChatContext";
 import Ketlyn from "../assets/Perfil.png";
 import UseCustomHistory from "../Hooks/UseCustomHistory";
-import { useState } from "react";
-import Quantidades from "./Quantidades";
 
 export default function Itens() {
   const {
-    opcoesDesejadas,
-    subopcoesDesejadas,
-    setSubopcoesDesejadas,
-    pedidoVazio,
-    handleVoltar,
-    handleContinuarSubopcoes,
+    subopcoes,
+    selectedOpcaoId,
+    selectedSubopcoes,
+    setSelectedSubopcoes,
+    setContinuarPedido,
   } = usePedidoContext();
 
   const { voltar } = UseCustomHistory();
-  const [itensEscolhidos, setItensEscolhidos] = useState([]);
 
-  const handleCheckboxChange = (item) => {
-    setItensEscolhidos((prevItens) => [...prevItens, item]);
-  };
+  const handleCheckboxChange = (itemName, id) => {
+    const subopcoesFiltradas = Object.keys(subopcoes).filter(
+      (key) => subopcoes[key].nome === itemName && subopcoes[key].id === id
+    );
 
-  const handleContinuar = () => {
-    setSubopcoesDesejadas([...subopcoesDesejadas, ...itensEscolhidos]);
-    handleContinuarSubopcoes();
+    setSelectedSubopcoes((prevSelected) => {
+      if (subopcoesFiltradas.some((item) => prevSelected.includes(item))) {
+        return prevSelected.filter(
+          (selectedItem) => !subopcoesFiltradas.includes(selectedItem)
+        );
+      } else {
+        return [...prevSelected, { itemName, id }];
+      }
+    });
   };
 
   const handleProx = () => {
-    <Quantidades />;
+    if (selectedSubopcoes.length > 0) {
+      setContinuarPedido(true);
+    } else {
+      console.log("Selecione pelo menos uma opção antes de continuar.");
+    }
   };
 
   return (
     <>
-      {!pedidoVazio && opcoesDesejadas[opcoesDesejadas.length - 1] === "Bolos" && (
+      {selectedOpcaoId === 1 && (
         <div className="menu_opcoes">
           <div className="intro">
             <img src={Ketlyn} alt="Ketlyn" className="img__perfil" />
@@ -44,32 +51,25 @@ export default function Itens() {
             </p>
           </div>
           <form className="btn__opcoes">
-            <input
-              type="checkbox"
-              name="Bolos Personalizados"
-              id="Bolos Personalizados"
-              className="checkbox"
-              onChange={() => handleCheckboxChange("Bolos Personalizados")}
-            />
-            <label className="opcao" htmlFor="Bolos Personalizados">
-              Bolos Personalizados
-            </label>
-            <input
-              type="checkbox"
-              name="Bolos Comuns"
-              id="Bolos Comuns"
-              className="checkbox"
-              onChange={() => handleCheckboxChange("Bolos Comuns")}
-            />
-            <label className="opcao" htmlFor="Bolos Comuns">
-              Bolos Comuns
-            </label>
-
+            {Array.isArray(subopcoes) &&
+              subopcoes.map((item) => (
+                <div key={item.id} className="opcao-item">
+                  <input
+                    type="checkbox"
+                    name={item.nome}
+                    id={item.id}
+                    className="checkbox"
+                    onChange={() => handleCheckboxChange(item.nome, item.id)}
+                  />
+                  <label className="opcao" htmlFor={item.id}>
+                    {item.nome}
+                  </label>
+                </div>
+              ))}
             <div className="send">
               <button
                 className="voltar"
                 onClick={() => {
-                  handleVoltar();
                   voltar();
                 }}
               >
@@ -82,7 +82,6 @@ export default function Itens() {
                 type="button"
                 className="opcao"
                 onClick={() => {
-                  handleContinuar();
                   handleProx();
                 }}
               >

@@ -1,15 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../../Components/Navbar/navbar";
 import { Card } from "react-bootstrap";
 import firebase from "../../Config/firebase";
+import Modals from "../../Components/Modals/Modals";
 import "./styles.css";
+import { AuthContext } from "../../Auth/Context/auth";
 
-export default function GerenciarPedidos() {
+export default function AcompanharPedido() {
   const [pedidosEmAberto, setPedidosEmAberto] = useState([]);
   const [pedidosEmAndamento, setPedidosEmAndamento] = useState([]);
   const [pedidosConcluidos, setPedidosConcluidos] = useState([]);
   const [lastPedidoNumber, setLastPedidoNumber] = useState(0);
+  const { userID } = useContext(AuthContext);
+  const [showModal, setShowModal] = useState(false);
 
+  const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
+
+  const handleShowModal = (pedido) => {
+    setPedidoSelecionado(pedido);
+  };
+
+  const handleHideModal = () => {
+    setPedidoSelecionado(null);
+  };
   useEffect(() => {
     async function getPedidos() {
       try {
@@ -18,25 +31,22 @@ export default function GerenciarPedidos() {
         const pedidosEmAndamentoData = [];
         const pedidosConcluidosData = [];
 
-        const usuariosRef = db.collection("usuarios");
-        const usuariosSnapshot = await usuariosRef.get();
+        const usuarioRef = db.collection("usuarios").doc(userID);
+        const pedidosRef = usuarioRef.collection("pedidos");
 
-        for (const usuarioDoc of usuariosSnapshot.docs) {
-          const pedidosRef = usuarioDoc.ref.collection("pedidos");
-          const pedidosSnapshot = await pedidosRef.get();
+        const pedidosSnapshot = await pedidosRef.get();
 
-          pedidosSnapshot.forEach((doc) => {
-            const dadosPedido = doc.data();
+        pedidosSnapshot.forEach((doc) => {
+          const dadosPedido = doc.data();
 
-            if (dadosPedido.emAberto) {
-              pedidosEmAbertoData.push(dadosPedido);
-            } else if (dadosPedido.emAndamento) {
-              pedidosEmAndamentoData.push(dadosPedido);
-            } else if (dadosPedido.concluido) {
-              pedidosConcluidosData.push(dadosPedido);
-            }
-          });
-        }
+          if (dadosPedido.emAberto) {
+            pedidosEmAbertoData.push(dadosPedido);
+          } else if (dadosPedido.emAndamento) {
+            pedidosEmAndamentoData.push(dadosPedido);
+          } else if (dadosPedido.concluido) {
+            pedidosConcluidosData.push(dadosPedido);
+          }
+        });
 
         setPedidosEmAberto(pedidosEmAbertoData);
         setPedidosEmAndamento(pedidosEmAndamentoData);
@@ -61,7 +71,7 @@ export default function GerenciarPedidos() {
 
     fetchLastPedidoNumber();
     getPedidos();
-  }, []);
+  }, [userID]);
 
   return (
     <>
@@ -76,8 +86,14 @@ export default function GerenciarPedidos() {
             {pedidosEmAberto.map((pedido, index) => (
               <Card className="column__item" key={index}>
                 <Card.Header>
-                  <button type="button" className="text column__item__text">
-                    Pedido {pedido.numero} - {pedido.cliente}
+                  <button
+                    type="button"
+                    className="text column__item__text"
+                    onClick={() => {
+                      handleShowModal();
+                    }}
+                  >
+                    Pedido {pedido.numero}
                   </button>
                 </Card.Header>
               </Card>
@@ -92,8 +108,12 @@ export default function GerenciarPedidos() {
             {pedidosEmAndamento.map((pedido, index) => (
               <Card className="column__item" key={index}>
                 <Card.Header>
-                  <button type="button" className="text column__item__text">
-                    Pedido {pedido.numero} - {pedido.cliente}
+                  <button
+                    type="button"
+                    className="text column__item__text"
+                    onClick={() => handleShowModal(pedido)}
+                  >
+                    Pedido {pedido.numero}
                   </button>
                 </Card.Header>
               </Card>
@@ -109,7 +129,7 @@ export default function GerenciarPedidos() {
               <Card className="column__item" key={index}>
                 <Card.Header>
                   <button type="button" className="text column__item__text">
-                    Pedido {pedido.numero} - {pedido.cliente}
+                    Pedido {pedido.numero}
                   </button>
                 </Card.Header>
               </Card>
@@ -117,6 +137,7 @@ export default function GerenciarPedidos() {
           </Card.Body>
         </Card>
       </div>
+      <Modals pedidoDetails={pedidoSelecionado} onHide={handleHideModal} />
     </>
   );
 }

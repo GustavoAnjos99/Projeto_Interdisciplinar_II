@@ -15,8 +15,8 @@ import { Dashboard } from "./app/Admin/Dashboard/Dashboard.jsx";
 import GerenciarPedidos from "./app/Admin/GerenciarPedidos/GerenciarPedidos.jsx";
 import Avaliacoes from "./app/Client/Avaliacoes/avaliacoes.jsx";
 import Ajuda from "./app/Ajuda/Ajuda.jsx";
-import ChatContainer from "./app/Client/Chatbot/ChatContainer.jsx";
-
+import AcompanharPedido from "./app/Client/AcompanharPedido/AcompanharPedido.jsx";
+import PedidoForm from "./app/Client/PedidoForm/PedidoForm.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -68,9 +68,15 @@ function App() {
         <SecureRoute
           exact
           path="/app/novo-pedido"
-          component={ChatContainer}
+          component={PedidoForm}
           allowedUserType="cliente"
         />
+        <SecureRoute
+          exact
+          path="/app/acompanhar-pedidos"
+          component={AcompanharPedido}
+          allowedUserType="cliente"
+        ></SecureRoute>
         <SecureRoute
           exact
           path="/app/avaliar-pedidos"

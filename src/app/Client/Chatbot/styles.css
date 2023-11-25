@@ -59,15 +59,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 95%;
+    max-width: 90%;
     flex-wrap: wrap;
-    gap: 5px
+    gap: 5px;
 }
 
 .opcao {
-    width: max-content;
-    height: max-content;
-    padding: 1rem;
+    padding: .7rem;
     border: 1px solid #000;
     color: #fff;
     vertical-align: middle;
@@ -82,7 +80,7 @@
     font-size: 12px;
 }
 
-.checkbox:checked + label {
+.opcao:checked + label {
     border: 2px solid #000;
 }
 
@@ -100,6 +98,23 @@
     flex-wrap: wrap;
 }
 
+.quantidades {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.input-quantidades {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
 .btnDiminuir, .btnAumentar {
   background-color: rgb(76, 43, 23);
   color: #fff;
@@ -113,4 +128,14 @@
   background-color: rgb(76, 43, 23);
 }
 
+.botao {
+  margin: 0 auto;
+  padding: .7rem;
+  border-radius: 30px;
+  color: #fff;
+  background-color: rgba(76, 43, 23, 0.70);
+  font-size: 15px;
+  text-align: center;
+  text-transform: uppercase;
+}
 

@@ -29,6 +29,10 @@
     
 }
 
+.table {
+    overflow: scroll;
+}
+
 .ultimosPedidos__header {
     background-color: #FFD6C8;
     border-radius: 5px;
