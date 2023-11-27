@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import firebase from "firebase";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 const ModalsAdmin = ({
   pedidoDetails,
@@ -23,10 +24,11 @@ const ModalsAdmin = ({
     setShowConfirmationPopup(true);
   };
 
-  const handleHideModal = () => {
+  const hideSuccessAlert = () => {
     setShowConfirmationPopup(false);
+    // If you want to do something after hiding the alert, add it here.
   };
-  
+
   const changePedidoStatus = () => {
     let newStatus;
 
@@ -41,7 +43,7 @@ const ModalsAdmin = ({
     return newStatus;
   };
 
-  const formatStatus = (status) => {
+  const formatStatus = () => {
     if (pedidoDetails.emAberto) {
       return "Em Aberto";
     } else if (pedidoDetails.emAndamento) {
@@ -58,7 +60,7 @@ const ModalsAdmin = ({
     return data?.toLocaleString();
   };
 
-  const updatePedidoStatusInFirebase = async (pedidoId, newStatus) => {
+  const updatePedidoStatusInFirebase = async () => {
     const db = firebase.firestore();
 
     if (pedidoDetails && pedidoDetails.idCliente != null) {
@@ -72,8 +74,9 @@ const ModalsAdmin = ({
         const docSnapshot = await pedidoRef.get();
 
         if (docSnapshot.exists) {
-          await pedidoRef.update(newStatus);
+          await pedidoRef.update(changePedidoStatus()); // Update with new status
           console.log("Document updated successfully!");
+          setShowConfirmationPopup(true); // Show success alert
         } else {
           console.error(
             "Document does not exist at the specified path:",
@@ -89,59 +92,55 @@ const ModalsAdmin = ({
       );
     }
   };
+
   return (
-    <Modal size="lg" centered show={pedidoDetails !== null} onHide={onHide}>
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          <h1>Dados do Pedido</h1>
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {pedidoDetails && (
-          <>
-            <p>Número do Pedido: {numero}</p>
-            <p>
-              Data do Pedido:{" "}
-              {pedidoDetails && formatarData(pedidoDetails.dataPedido)}
-            </p>
-            <p>Cliente: {cliente}</p>
-            <p>Avaliação: {avaliacao}</p>
-            <p>Status: {formatStatus({ emAberto, emAndamento, concluido })}</p>
-            <h3>Itens do pedido:</h3>
-            <p>
-              {itens &&
-                Array.isArray(itens) &&
-                itens.map((item, index) => <p key={index}>{item}</p>)}
-            </p>
-          </>
-        )}
-      </Modal.Body>
-      <Modal.Footer>
-        <button className="submit" onClick={onHide}>
-          Fechar
-        </button>
-        <button
-          className="submit"
-          onClick={() =>
-            updatePedidoStatusInFirebase(
-              pedidoDetails.idPedido,
-              changePedidoStatus()
-            )
-          }
-        >
-          Mudar Status
-        </button>
-      </Modal.Footer>
-    </Modal>
-    {showConfirmationPopup && (
+    <>
+      <Modal size="lg" centered show={pedidoDetails !== null} onHide={onHide}>
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            <h1>Dados do Pedido</h1>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {pedidoDetails && (
+            <>
+              <p>Número do Pedido: {numero}</p>
+              <p>
+                Data do Pedido:{" "}
+                {pedidoDetails && formatarData(pedidoDetails.dataPedido)}
+              </p>
+              <p>Cliente: {cliente}</p>
+              <p>Avaliação: {avaliacao}</p>
+              <p>Status: {formatStatus()}</p>
+              <h3>Itens do pedido:</h3>
+              <p>
+                {itens &&
+                  Array.isArray(itens) &&
+                  itens.map((item, index) => <p key={index}>{item}</p>)}
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="submit" onClick={onHide}>
+            Fechar
+          </button>
+          <button className="submit" onClick={updatePedidoStatusInFirebase}>
+            Mudar Status
+          </button>
+        </Modal.Footer>
+      </Modal>
+      {showConfirmationPopup && (
         <SweetAlert
           success
-          title="Pedido Enviado!"
+          title="Status Alterado!"
           onConfirm={hideSuccessAlert}
         >
-          Pedido enviado com sucesso. Agradecemos pela preferência!
+          Status alterado com sucesso. Para sincronizar os pedidos, recarregue a
+          página!
         </SweetAlert>
       )}
+    </>
   );
 };
 
