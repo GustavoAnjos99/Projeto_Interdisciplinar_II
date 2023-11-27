@@ -23,6 +23,18 @@ export default function AcompanharPedido() {
   const handleHideModal = () => {
     setPedidoSelecionado(null);
   };
+
+  async function getPedidoStatus(status) {
+    if (pedidoSelecionado.emAberto) {
+      return (status = "Em aberto");
+    } else if (pedidoSelecionado.emAndamento) {
+      return (status = "Em andamento");
+    } else if (pedidoSelecionado.concluido) {
+      return (status = "Concluído");
+    } else {
+      return null;
+    }
+  }
   useEffect(() => {
     async function getPedidos() {
       try {

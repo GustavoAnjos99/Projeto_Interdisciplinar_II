@@ -1,6 +1,7 @@
 //Components
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { FiSend } from "react-icons/fi";
+import SweetAlert from "react-bootstrap-sweetalert";
 import Navbar from "../../Components/Navbar/navbar";
 import UserForm from "./Components/UserForm";
 import OpcoesForm from "./Components/OpcoesForm";
@@ -11,17 +12,19 @@ import Agradecimento from "./Components/Agradecimento";
 import Steps from "./Components/Steps";
 //Hooks
 import { useForm } from "./Hooks/UseForm";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 //Styles
 import "./PedidoForm.css";
+//Others
+import { useHistory } from "react-router-dom";
 
 //Firebase Config
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+import { AuthContext } from "../../Auth/Context/auth";
 
 const db = firebase.firestore();
-
 const formTemplate = {
   nome: "",
   email: "",
@@ -29,9 +32,33 @@ const formTemplate = {
 };
 
 export default function PedidoForm() {
+  const { userID } = useContext(AuthContext);
   const [currentUser, setCurrentUser] = useState(null);
+  const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
+  const history = useHistory();
+
+  const showSuccessAlert = showConfirmationPopup;
+
+  const hideSuccessAlert = () => {
+    setShowConfirmationPopup(false);
+    history.push("/app/meu-perfil");
+  };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const numeroPedido = await setNumeroPedido();
+        setData((prevData) => ({
+          ...prevData,
+          numero: numeroPedido,
+        }));
+      } catch (error) {
+        console.error("Erro ao obter o número do pedido:", error);
+      }
+    };
+
+    fetchData();
+
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setCurrentUser(user);
@@ -39,11 +66,13 @@ export default function PedidoForm() {
         setCurrentUser(null);
       }
     });
+
     return () => unsubscribe();
-  }, []);
+  }, []); // Certifique-se de passar um array de dependências vazio para garantir que o useEffect seja executado apenas uma vez
 
   const [data, setData] = useState({
     ...formTemplate,
+    idCliente: userID,
     itens: [],
     quantidades: [],
     avaliacao: "",
@@ -51,9 +80,10 @@ export default function PedidoForm() {
     emAberto: true,
     emAndamento: false,
     dataPedido: new Date().toDateString(),
-    numero: 1,
   });
+
   const [opcaoSelecionada, setOpcaoSelecionada] = useState(false);
+
   function handleQuantidade(index, newValue, key) {
     setData((prev) => {
       const newQuantidades = [...prev[key]];
@@ -65,6 +95,7 @@ export default function PedidoForm() {
       };
     });
   }
+
   const updateFieldHandler = (key, value) => {
     setData((prev) => {
       const updatedValue = Array.isArray(prev[key])
@@ -115,7 +146,7 @@ export default function PedidoForm() {
             "Por favor, preencha todas as quantidades para os itens selecionados!"
           );
         } else {
-          setData(...data, data.quantidades);
+          setData({ ...data, quantidades: data.quantidades });
           changeStep(step + 1);
         }
         break;
@@ -161,16 +192,64 @@ export default function PedidoForm() {
     isLastStep,
   } = useForm(formComponents);
 
+  const formattedData = (data) => {
+    const itensQuantidades = data.itens.map((item, id) => {
+      const quantidade = data.quantidades[id];
+      return `${item}: ${quantidade}`;
+    });
+
+    const formattedDate = new Date(data.dataPedido);
+
+    return {
+      cliente: data.nome,
+      idCliente: data.idCliente,
+      email: data.email,
+      opcoes: data.opcoes,
+      itensQuantidades,
+      avaliacao: data.avaliacao,
+      concluido: data.concluido,
+      emAberto: data.emAberto,
+      emAndamento: data.emAndamento,
+      dataPedido: formattedDate,
+      numero: data.numero,
+    };
+  };
+
   const sendDataToFirebase = async (data) => {
     try {
+      const formatted = formattedData(data);
       await db
         .collection("usuarios")
         .doc(currentUser.uid)
         .collection("pedidos")
-        .add(data);
+        .add(formatted);
       console.log("Pedido enviado com sucesso!");
     } catch (e) {
       console.error("Erro ao enviar dados para o Firestore: ", e);
+    }
+  };
+
+  const setNumeroPedido = async () => {
+    const ultimoPedidoNumberRef = await db
+      .collection("usuarios")
+      .doc(userID)
+      .collection("pedidos");
+    try {
+      let ultimoPedidoSnapshot = await ultimoPedidoNumberRef
+        .orderBy("numero", "desc")
+        .limit(1)
+        .get();
+
+      if (!ultimoPedidoSnapshot.empty) {
+        let ultimoPedidoData = ultimoPedidoSnapshot.docs[0].data();
+        let ultimoPedidoNumber = ultimoPedidoData.numero;
+
+        return ultimoPedidoNumber + 1;
+      } else {
+        return 1;
+      }
+    } catch (e) {
+      console.error("Ocorreu um erro, tente novamente mais tarde!");
     }
   };
   return (
@@ -186,7 +265,10 @@ export default function PedidoForm() {
         </div>
         <div className="form-containers">
           <Steps currentStep={currentStep} />
-          <form onSubmit={(e) => changeStep(currentStep + 1, e)}>
+          <form
+            className="formularios"
+            onSubmit={(e) => changeStep(currentStep + 1, e)}
+          >
             <div className="inputs-container">{currentComponent}</div>
             <div className="actions">
               {!isFirstStep && (
@@ -212,6 +294,7 @@ export default function PedidoForm() {
                   type="submit"
                   onClick={() => {
                     sendDataToFirebase(data);
+                    setShowConfirmationPopup(true);
                   }}
                 >
                   <span>Enviar</span>
@@ -222,6 +305,15 @@ export default function PedidoForm() {
           </form>
         </div>
       </div>
+      {showConfirmationPopup && (
+        <SweetAlert
+          success
+          title="Pedido Enviado!"
+          onConfirm={hideSuccessAlert}
+        >
+          Pedido enviado com sucesso. Agradecemos pela preferência!
+        </SweetAlert>
+      )}
     </>
   );
 }

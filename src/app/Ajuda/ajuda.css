@@ -1,14 +1,24 @@
 main {
-    background-color: #ffd9cb;
+    background-color: #FFE5DD;
     margin: 5%;
     text-align: center;
-    margin-top: 0;
+    margin: auto;
     border-radius: 5px;
-    padding: 15px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
 }
 
 .ajuda__input {
-    width: 250px;
+    display: flex;
+    width: 90%;
+    border: none;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255,240,235,255);
+    border-radius: 5px;
 }
 
 .dados {

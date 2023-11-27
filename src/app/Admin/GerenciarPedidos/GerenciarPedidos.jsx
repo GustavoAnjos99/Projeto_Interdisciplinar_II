@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../../Components/Navbar/navbar";
 import { Card } from "react-bootstrap";
+import ModalsAdmin from "../../Components/Modals/ModalsAdmin";
 import firebase from "../../Config/firebase";
 import "./styles.css";
 
@@ -10,8 +11,60 @@ export default function GerenciarPedidos() {
   const [pedidosConcluidos, setPedidosConcluidos] = useState([]);
   const [lastPedidoNumber, setLastPedidoNumber] = useState(0);
 
+  const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
+  const [pedidoStatus, setPedidoStatus] = useState(null);
+
+  const handleShowModal = (pedido) => {
+    setPedidoSelecionado(pedido);
+  };
+
+  const handleHideModal = () => {
+    setPedidoSelecionado(null);
+  };
+
+  const getPedidoStatus = async (pedido) => {
+    if (pedido && pedido.emAberto) {
+      return "Em aberto";
+    } else if (pedido && pedido.emAndamento) {
+      return "Em andamento";
+    } else if (pedido && pedido.concluido) {
+      return "Concluído";
+    } else {
+      return null;
+    }
+  };
+
+  const updatePedidoStatus = async (newStatus) => {
+    try {
+      const db = firebase.firestore();
+      const pedidoRef = db
+        .collection("usuarios")
+        .doc(pedidoSelecionado.idCliente) // Specify the document ID here
+        .collection("pedidos")
+        .doc(pedidoSelecionado.id);
+
+      if (newStatus === "Em andamento") {
+        await pedidoRef.update({
+          emAberto: false,
+          emAndamento: true,
+          concluido: false,
+        });
+      } else if (newStatus === "Concluído") {
+        await pedidoRef.update({
+          emAberto: false,
+          emAndamento: false,
+          concluido: true,
+        });
+      }
+
+      setPedidoStatus(newStatus);
+    } catch (error) {
+      console.error("Erro ao atualizar o status do pedido:", error);
+    }
+  };
+
   useEffect(() => {
-    async function getPedidos() {
+    const fetchData = async () => {
       try {
         const db = firebase.firestore();
         const pedidosEmAbertoData = [];
@@ -44,9 +97,9 @@ export default function GerenciarPedidos() {
       } catch (error) {
         console.error("Erro ao obter pedidos:", error);
       }
-    }
+    };
 
-    async function fetchLastPedidoNumber() {
+    const fetchLastPedidoNumber = async () => {
       try {
         const db = firebase.firestore();
         const lastNumberRef = db.collection("metadata").doc("numeroDePedidos");
@@ -57,11 +110,22 @@ export default function GerenciarPedidos() {
       } catch (error) {
         console.error("Erro ao obter o último número de pedido:", error);
       }
-    }
+    };
 
+    fetchData();
     fetchLastPedidoNumber();
-    getPedidos();
   }, []);
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      if (pedidoSelecionado) {
+        const status = await getPedidoStatus(pedidoSelecionado);
+        setPedidoStatus(status);
+      }
+    };
+
+    fetchStatus();
+  }, [pedidoSelecionado]);
 
   return (
     <>
@@ -76,7 +140,13 @@ export default function GerenciarPedidos() {
             {pedidosEmAberto.map((pedido, index) => (
               <Card className="column__item" key={index}>
                 <Card.Header>
-                  <button type="button" className="text column__item__text">
+                  <button
+                    type="button"
+                    className="text column__item__text"
+                    onClick={() => {
+                      handleShowModal(pedido);
+                    }}
+                  >
                     Pedido {pedido.numero} - {pedido.cliente}
                   </button>
                 </Card.Header>
@@ -92,7 +162,11 @@ export default function GerenciarPedidos() {
             {pedidosEmAndamento.map((pedido, index) => (
               <Card className="column__item" key={index}>
                 <Card.Header>
-                  <button type="button" className="text column__item__text">
+                  <button
+                    type="button"
+                    className="text column__item__text"
+                    onClick={() => handleShowModal(pedido)}
+                  >
                     Pedido {pedido.numero} - {pedido.cliente}
                   </button>
                 </Card.Header>
@@ -108,7 +182,13 @@ export default function GerenciarPedidos() {
             {pedidosConcluidos.map((pedido, index) => (
               <Card className="column__item" key={index}>
                 <Card.Header>
-                  <button type="button" className="text column__item__text">
+                  <button
+                    type="button"
+                    className="text column__item__text"
+                    onClick={() => {
+                      handleShowModal();
+                    }}
+                  >
                     Pedido {pedido.numero} - {pedido.cliente}
                   </button>
                 </Card.Header>
@@ -117,6 +197,16 @@ export default function GerenciarPedidos() {
           </Card.Body>
         </Card>
       </div>
+      <ModalsAdmin
+        pedidoDetails={pedidoSelecionado}
+        cliente={pedidoSelecionado?.cliente}
+        avaliacao={pedidoSelecionado?.avaliacao}
+        itens={pedidoSelecionado?.itensQuantidades}
+        dataPedido={pedidoSelecionado?.dataPedido}
+        status={pedidoStatus}
+        onHide={handleHideModal}
+        changeStatus={updatePedidoStatus}
+      />
     </>
   );
 }

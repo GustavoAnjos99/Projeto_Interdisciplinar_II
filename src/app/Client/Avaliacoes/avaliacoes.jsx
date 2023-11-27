@@ -15,6 +15,7 @@ function Avaliacoes() {
   const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
 
+  //Firebase
   useEffect(() => {
     const fetchPedidos = async () => {
       const db = firebase.firestore();
@@ -91,6 +92,9 @@ function Avaliacoes() {
     }
   };
 
+  //Formulário
+  const formData = {};
+
   return (
     <>
       <Navbar />
@@ -158,7 +162,7 @@ function Avaliacoes() {
         {/* SweetAlert para sucesso */}
         {showAlert && (
           <SweetAlert success title="Sucesso!" onConfirm={hideSuccessAlert}>
-            Avaliação enviada com sucesso!!! Agradecemos muito por sua mensagem.
+            Avaliação enviada com sucesso! Agradecemos muito por sua mensagem.
             Sua opinião é extremamente valiosa para nós, e estamos contentes por
             ter compartilhado seus pensamentos conosco.
           </SweetAlert>

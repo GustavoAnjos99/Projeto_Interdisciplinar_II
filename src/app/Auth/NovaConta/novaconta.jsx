@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import "./novaconta.css";
 import firebase from "../../Config/firebase";
+import { deleteDoc } from "firebase/firestore";
 import "firebase/auth";
 import { Menu } from "../../../site/Components/menu";
+import { generatePedidoNumber } from "../../Utils/UtilFunctions";
 import bcrypt from "bcryptjs";
 
 function NovaConta() {
@@ -53,15 +55,22 @@ function NovaConta() {
             })
             .then(() => {
               const pedidos = usuarios.doc(idUsuario).collection("pedidos");
-              pedidos.add({
-                cliente: nomecompleto,
-                emAberto: false,
-                emAndamento: false,
-                concluido: true,
-                itens: "",
-                dataPedido: new Date(),
-                numero: 0,
-              });
+              pedidos
+                .add({
+                  cliente: nomecompleto,
+                  emAberto: false,
+                  emAndamento: false,
+                  concluido: true,
+                  itens: "",
+                  dataPedido: new Date(),
+                  numero: 0,
+                })
+                .then((pedidoDocRef) => {
+                  pedidoDocRef.delete();
+                })
+                .catch((e) => {
+                  console.error("Algo deu errado: ", e);
+                });
             })
             .catch((error) => {
               setSucesso("N");
@@ -94,7 +103,7 @@ function NovaConta() {
     <>
       <Menu />
       <div className="d-flex align-items-center text-center form-container">
-        <form className="form-signin" style={{ marginTop: 7.5 + "rem" }}>
+        <form className="form-signin signupForm">
           <h1 className="h3 mb-3 fw-normal">Criar Conta</h1>
           <p>
             Ainda não possui uma conta? Faça seu cadastro e aproveite nosso

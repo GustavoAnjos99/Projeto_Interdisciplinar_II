@@ -1,15 +1,16 @@
 import React from "react";
 
 const OpcoesForm = ({ data, updateFieldHandler }) => {
+  const getCheckboxClass = (itemName) => {
+    return data.opcoes.includes(itemName) ? "opcao checked" : "opcao";
+  };
+
   return (
     <>
       <h2>Catálogo de Opções</h2>
       <p>Agora, escolha as opções desejadas para sua festa!</p>
       <div className="btn__opcoes">
-        <div className="label-selected">
-          <label htmlFor="bolos" className="opcao">
-            Bolos
-          </label>
+        <div>
           <input
             type="checkbox"
             className="checkbox"
@@ -18,11 +19,11 @@ const OpcoesForm = ({ data, updateFieldHandler }) => {
             checked={data.opcoes.includes("Bolos")}
             onChange={() => updateFieldHandler("opcoes", "Bolos")}
           />
+          <label htmlFor="bolos" className={getCheckboxClass("Bolos")}>
+            Bolos
+          </label>
         </div>
         <div>
-          <label htmlFor="doces" className="opcao">
-            Doces
-          </label>
           <input
             type="checkbox"
             className="checkbox"
@@ -31,11 +32,11 @@ const OpcoesForm = ({ data, updateFieldHandler }) => {
             checked={data.opcoes.includes("Doces")}
             onChange={() => updateFieldHandler("opcoes", "Doces")}
           />
+          <label htmlFor="doces" className={getCheckboxClass("Doces")}>
+            Doces
+          </label>
         </div>
         <div>
-          <label htmlFor="salgados" className="opcao">
-            Salgados
-          </label>
           <input
             type="checkbox"
             className="checkbox"
@@ -44,11 +45,11 @@ const OpcoesForm = ({ data, updateFieldHandler }) => {
             checked={data.opcoes.includes("Salgados")}
             onChange={() => updateFieldHandler("opcoes", "Salgados")}
           />
+          <label htmlFor="salgados" className={getCheckboxClass("Salgados")}>
+            Salgados
+          </label>
         </div>
         <div>
-          <label htmlFor="MiniLanches" className="opcao">
-            Mini Lanches
-          </label>
           <input
             type="checkbox"
             className="checkbox"
@@ -57,11 +58,14 @@ const OpcoesForm = ({ data, updateFieldHandler }) => {
             checked={data.opcoes.includes("Mini Lanches")}
             onChange={() => updateFieldHandler("opcoes", "Mini Lanches")}
           />
+          <label
+            htmlFor="MiniLanches"
+            className={getCheckboxClass("Mini Lanches")}
+          >
+            Mini Lanches
+          </label>
         </div>
         <div>
-          <label htmlFor="buffet" className="opcao">
-            Serviços de Buffet
-          </label>
           <input
             type="checkbox"
             className="checkbox"
@@ -70,6 +74,12 @@ const OpcoesForm = ({ data, updateFieldHandler }) => {
             checked={data.opcoes.includes("Serviços de Buffet")}
             onChange={() => updateFieldHandler("opcoes", "Serviços de Buffet")}
           />
+          <label
+            htmlFor="buffet"
+            className={getCheckboxClass("Serviços de Buffet")}
+          >
+            Serviços de Buffet
+          </label>
         </div>
       </div>
     </>

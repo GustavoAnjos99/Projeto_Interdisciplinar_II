@@ -11,49 +11,6 @@
     gap: 10px;
 }
 
-.menu_opcoes, .react-chatbot-kit-chat-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 1rem;
-    border-radius: 10px;
-    width: 80vw;
-    gap: 20px;
-    height: auto;
-    background: rgba(255, 219, 208, 0.95);
-    margin: 25px auto;
-}
-
-.menu_opcoes .text {
-    display: flex;
-    width: 80%;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
-
-.intro {
-    display: flex;
-    flex-wrap: nowrap;
-    width: 100%;
-    gap: 15px;
-}
-
-.img__perfil {
-    display: flex;
-    width: 48px;
-    height: 48px;
-    border-radius: 48px;
-}
-
-.voltar {
-    width: 48px;
-    height: 48px;
-    border-radius: 48px;
-    background-color: rgb(76, 43, 23);
-}
-
 
 .btn__opcoes {
     display: flex;
@@ -80,7 +37,7 @@
     font-size: 12px;
 }
 
-.checkbox:checked + .label-selected {
+.checkbox:checked {
     border: 3px solid #000;
 }
 
@@ -102,88 +59,5 @@
     margin: 0 auto;
 }
 
-.btnDiminuir, .btnAumentar {
-  background-color: rgb(76, 43, 23);
-  color: #fff;
-  border: none;
-  padding: 10px;
-  margin: 5px;
-  cursor: pointer;
-}
-
-.btnDiminuir:hover, .btnAumentar:hover {
-  background-color: rgb(76, 43, 23);
-}
 
 
-.react-chatbot-kit-chat-inner-container {
-}
-
-.react-chatbot-kit-chat-header {
-}
-
-.react-chatbot-kit-chat-input-container {
-}
-
-.react-chatbot-kit-chat-message-container {
-}
-
-.react-chatbot-kit-chat-input {
-}
-
-.react-chatbot-kit-chat-input-form {
-}
-
-.react-chatbot-kit-chat-input::placeholder {
-}
-
-.react-chatbot-kit-chat-btn-send {
-}
-
-.react-chatbot-kit-chat-btn-send-icon {
-}
-
-.react-chatbot-kit-chat-bot-message-container {
-}
-
-.react-chatbot-kit-chat-bot-avatar-container {
-}
-
-.react-chatbot-kit-chat-bot-avatar-icon {
-}
-
-.react-chatbot-kit-chat-bot-avatar-letter {
-}
-
-.react-chatbot-kit-chat-bot-message {
-}
-
-.react-chatbot-kit-chat-bot-message-arrow {
-}
-
-.react-chatbot-kit-chat-bot-loading-icon-container {
-}
-
-.chatbot-loader-container {
-}
-
-#chatbot-loader #chatbot-loader-dot1 {
-}
-
-#chatbot-loader #chatbot-loader-dot2 {
-}
-
-#chatbot-loader #chatbot-loader-dot3 {
-}
-
-.react-chatbot-kit-error {
-}
-
-.react-chatbot-kit-error-container {
-}
-
-.react-chatbot-kit-error-header {
-}
-
-.react-chatbot-kit-error-docs {
-}

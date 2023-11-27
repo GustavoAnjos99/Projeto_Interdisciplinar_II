@@ -5,6 +5,7 @@
      padding: 2rem;
      margin: 0 auto;
 }
+
 .full-form {
     display: flex;
     max-width: 90%;
@@ -72,7 +73,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    width: 100%;
+    width: 90%;
     flex-wrap: wrap;
     gap: 15px;
 }
@@ -103,6 +104,13 @@
     cursor: pointer;
     border: none;
     transition: 0.3s;
+}
+
+.formularios {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .steps {
@@ -152,10 +160,47 @@
         display: flex;
         align-items: flex-start;
         justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        max-width: 100%;
 }
 
 .btn__quantidades {
     gap: 40px;
+}
+
+.suboption, .label-selected {
+    color: #000;
+    border-radius: 20px;
+    border: 2px solid #4C2B17;
+}
+
+.opcao {
+    padding: 1rem;
+    border: 1px solid #000;
+    color: #fff;
+    vertical-align: middle;
+    background-color: rgba(76, 43, 23, 0.50);
+    border-radius: 15px;
+    text-transform: uppercase;
+    font-size: 14px;
+    flex-wrap: nowrap;
+}
+
+.checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    display: none;
+}
+
+.checkbox:checked + .opcao,
+.checkbox:checked ~ .opcao {
+    border: 2.5px solid #000;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
 }
 
 .quantidades, .quantidades__input {
@@ -202,6 +247,11 @@
     justify-content: flex-start;
     }
 
+    .formularios {
+    max-width: 90%;
+    flex-wrap: wrap;
+}
+
     .container-formulario, .form-containers {
         padding: 10px;
         display: flex;
@@ -240,6 +290,10 @@
         flex-wrap: wrap;
         position: relative;
         left: 5%;
+    }
+
+    .btn__opcoes, .btn__itens, .btn__quantidades {
+        flex-wrap: wrap;
     }
 }
 

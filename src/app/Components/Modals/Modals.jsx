@@ -2,7 +2,7 @@
 import React from "react";
 import Modal from "react-bootstrap/Modal";
 
-const Modals = ({ pedidoDetails, onHide }) => {
+const Modals = ({ pedidoDetails, onHide, ...props }) => {
   return (
     <Modal size="lg" centered show={pedidoDetails !== null} onHide={onHide}>
       <Modal.Header closeButton>
@@ -13,7 +13,7 @@ const Modals = ({ pedidoDetails, onHide }) => {
       <Modal.Body>
         {pedidoDetails && (
           <>
-            <p>Número do Pedido: {pedidoDetails.numero}</p>
+            <p>Número do Pedido: {props.numero}</p>
             <p>Data do Pedido: {pedidoDetails.dataPedido}</p>
             <p>Resumo do Pedido: </p>
             {pedidoDetails}

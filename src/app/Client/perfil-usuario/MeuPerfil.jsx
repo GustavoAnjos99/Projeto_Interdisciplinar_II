@@ -47,7 +47,7 @@ function MeuPerfil() {
               ...data,
               dataPedido:
                 data.dataPedido && data.dataPedido.toDate
-                  ? data.dataPedido.toDate()
+                  ? data.dataPedido.toDate().toLocaleString()
                   : null,
             };
           });
