@@ -3,6 +3,7 @@ import Navbar from "../../Components/Navbar/navbar";
 import { Card } from "react-bootstrap";
 import ModalsAdmin from "../../Components/Modals/ModalsAdmin";
 import firebase from "../../Config/firebase";
+import { SpinningCircles } from "react-loading-icons";
 import "./styles.css";
 
 export default function GerenciarPedidos() {
@@ -10,9 +11,9 @@ export default function GerenciarPedidos() {
   const [pedidosEmAndamento, setPedidosEmAndamento] = useState([]);
   const [pedidosConcluidos, setPedidosConcluidos] = useState([]);
   const [lastPedidoNumber, setLastPedidoNumber] = useState(0);
-
   const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
   const [pedidoStatus, setPedidoStatus] = useState("Em Aberto");
+  const [loading, setLoading] = useState(true);
 
   const handleShowModal = (pedido) => {
     setPedidoSelecionado(pedido);
@@ -94,6 +95,7 @@ export default function GerenciarPedidos() {
         setPedidosEmAberto(pedidosEmAbertoData);
         setPedidosEmAndamento(pedidosEmAndamentoData);
         setPedidosConcluidos(pedidosConcluidosData);
+        setLoading(false);
       } catch (error) {
         console.error("Erro ao obter pedidos:", error);
       }
@@ -120,13 +122,24 @@ export default function GerenciarPedidos() {
     const fetchStatus = async () => {
       if (pedidoSelecionado) {
         const status = await getPedidoStatus(pedidoSelecionado);
-        setPedidoStatus(status || "Em Aberto");
+        if (status === "emAberto") {
+          setPedidoStatus("Em Aberto");
+        } else if (status === "emAndamento") {
+          setPedidoStatus("Em Andamento");
+        } else if (status === "concluido") {
+          setPedidoStatus("Concluído");
+        } else {
+          setPedidoStatus("Status desconhecido");
+        }
       }
     };
 
     fetchStatus();
   }, [pedidoSelecionado]);
 
+  const filterPedidos = (pedidos) => {
+    return pedidos.filter((pedido) => pedido.numero !== 0);
+  };
   return (
     <>
       <Navbar />
@@ -134,79 +147,92 @@ export default function GerenciarPedidos() {
         Gerenciamento de Pedidos
       </h1>
       <div className="card__container">
-        <Card className="column">
-          <Card.Header className="text heading">Pedidos em Aberto</Card.Header>
-          <Card.Body>
-            {pedidosEmAberto.map((pedido, index) => (
-              <Card className="column__item" key={index}>
-                <Card.Header>
-                  <button
-                    type="button"
-                    className="text column__item__text"
-                    onClick={() => {
-                      handleShowModal(pedido);
-                    }}
-                  >
-                    Pedido {pedido.numero} - {pedido.cliente}
-                  </button>
-                </Card.Header>
-              </Card>
-            ))}
-          </Card.Body>
-        </Card>
-        <Card className="column">
-          <Card.Header className="text heading">
-            Pedidos em Andamento
-          </Card.Header>
-          <Card.Body>
-            {pedidosEmAndamento.map((pedido, index) => (
-              <Card className="column__item" key={index}>
-                <Card.Header>
-                  <button
-                    type="button"
-                    className="text column__item__text"
-                    onClick={() => handleShowModal(pedido)}
-                  >
-                    Pedido {pedido.numero} - {pedido.cliente}
-                  </button>
-                </Card.Header>
-              </Card>
-            ))}
-          </Card.Body>
-        </Card>
-        <Card className="column">
-          <Card.Header className="text heading ">
-            Pedidos Concluídos
-          </Card.Header>
-          <Card.Body>
-            {pedidosConcluidos.map((pedido, index) => (
-              <Card className="column__item" key={index}>
-                <Card.Header>
-                  <button
-                    type="button"
-                    className="text column__item__text"
-                    onClick={() => {
-                      handleShowModal(pedido);
-                    }}
-                  >
-                    Pedido {pedido.numero} - {pedido.cliente}
-                  </button>
-                </Card.Header>
-              </Card>
-            ))}
-          </Card.Body>
-        </Card>
+        {loading ? (
+          <div className="loading">
+            <SpinningCircles fill="#4C2B17" speed="0.75" />
+          </div>
+        ) : (
+          <>
+            <Card className="column">
+              <Card.Header className="text heading">
+                Pedidos em Aberto
+              </Card.Header>
+              <Card.Body>
+                {pedidosEmAberto.map((pedido, index) => (
+                  <Card className="column__item" key={index}>
+                    <Card.Header>
+                      <button
+                        type="button"
+                        className="text column__item__text"
+                        onClick={() => {
+                          handleShowModal(pedido);
+                        }}
+                      >
+                        Pedido {pedido.numero} - {pedido.cliente}
+                      </button>
+                    </Card.Header>
+                  </Card>
+                ))}
+              </Card.Body>
+            </Card>
+            <Card className="column">
+              <Card.Header className="text heading">
+                Pedidos em Andamento
+              </Card.Header>
+              <Card.Body>
+                {pedidosEmAndamento.map((pedido, index) => (
+                  <Card className="column__item" key={index}>
+                    <Card.Header>
+                      <button
+                        type="button"
+                        className="text column__item__text"
+                        onClick={() => handleShowModal(pedido)}
+                      >
+                        Pedido {pedido.numero} - {pedido.cliente}
+                      </button>
+                    </Card.Header>
+                  </Card>
+                ))}
+              </Card.Body>
+            </Card>
+            <Card className="column">
+              <Card.Header className="text heading ">
+                Pedidos Concluídos
+              </Card.Header>
+              <Card.Body>
+                {filterPedidos(pedidosConcluidos).map((pedido, index) => (
+                  <Card className="column__item" key={index}>
+                    <Card.Header>
+                      <button
+                        type="button"
+                        className="text column__item__text"
+                        onClick={() => {
+                          handleShowModal(pedido);
+                        }}
+                      >
+                        Pedido {pedido.numero} - {pedido.cliente}
+                      </button>
+                    </Card.Header>
+                  </Card>
+                ))}
+              </Card.Body>
+            </Card>
+          </>
+        )}
       </div>
-      <ModalsAdmin
-        pedidoDetails={pedidoSelecionado}
-        cliente={pedidoSelecionado?.cliente}
-        avaliacao={pedidoSelecionado?.avaliacao}
-        itens={pedidoSelecionado?.itensQuantidades}
-        dataPedido={pedidoSelecionado?.dataPedido}
-        status={pedidoStatus}
-        onHide={handleHideModal}
-        changeStatus={updatePedidoStatus}
-      />
+      {pedidoSelecionado ? (
+        <ModalsAdmin
+          pedidoDetails={pedidoSelecionado}
+          cliente={pedidoSelecionado?.cliente}
+          avaliacao={pedidoSelecionado?.avaliacao}
+          itens={pedidoSelecionado?.itensQuantidades}
+          dataPedido={pedidoSelecionado?.dataPedido}
+          idPedido={pedidoSelecionado.idPedido}
+          status={pedidoStatus}
+          onHide={handleHideModal}
+          changeStatus={updatePedidoStatus}
+        />
+      ) : null}
     </>
   );
 }

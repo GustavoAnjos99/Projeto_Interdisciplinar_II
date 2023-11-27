@@ -218,12 +218,16 @@ export default function PedidoForm() {
   const sendDataToFirebase = async (data) => {
     try {
       const formatted = formattedData(data);
-      await db
+      const docRef = db
         .collection("usuarios")
         .doc(currentUser.uid)
         .collection("pedidos")
-        .add(formatted);
+        .doc();
+
+      await docRef.set({ ...formatted, idPedido: docRef.id });
+
       console.log("Pedido enviado com sucesso!");
+      console.log("ID do pedido:", docRef.id);
     } catch (e) {
       console.error("Erro ao enviar dados para o Firestore: ", e);
     }

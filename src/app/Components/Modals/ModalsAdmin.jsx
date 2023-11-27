@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import firebase from "firebase";
 
@@ -14,28 +14,39 @@ const ModalsAdmin = ({
   emAndamento,
   concluido,
   changeStatus,
+  idPedido,
   ...props
 }) => {
+  const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
+
+  const handleShowModal = () => {
+    setShowConfirmationPopup(true);
+  };
+
+  const handleHideModal = () => {
+    setShowConfirmationPopup(false);
+  };
+  
   const changePedidoStatus = () => {
     let newStatus;
 
-    if (emAberto) {
-      newStatus = { emAndamento: true, emAberto: false, concluido: false };
-    } else if (emAndamento) {
-      newStatus = { emAndamento: false, emAberto: false, concluido: true };
-    } else {
-      newStatus = { emAndamento: false, emAberto: false, concluido: false };
+    if (pedidoDetails.emAberto) {
+      newStatus = { emAberto: false, emAndamento: true, concluido: false };
+    } else if (pedidoDetails.emAndamento) {
+      newStatus = { emAberto: false, emAndamento: false, concluido: true };
+    } else if (pedidoDetails.concluido) {
+      newStatus = { emAberto: false, emAndamento: false, concluido: false };
     }
 
-    changeStatus({ status: newStatus }); // Modificado para passar um objeto com a propriedade 'status'
+    return newStatus;
   };
 
   const formatStatus = (status) => {
-    if (status.emAberto) {
+    if (pedidoDetails.emAberto) {
       return "Em Aberto";
-    } else if (status.emAndamento) {
+    } else if (pedidoDetails.emAndamento) {
       return "Em Andamento";
-    } else if (status.concluido) {
+    } else if (pedidoDetails.concluido) {
       return "Concluído";
     } else {
       return "Status Desconhecido";
@@ -50,19 +61,18 @@ const ModalsAdmin = ({
   const updatePedidoStatusInFirebase = async (pedidoId, newStatus) => {
     const db = firebase.firestore();
 
-    // Add a conditional check for pedidoDetails
     if (pedidoDetails && pedidoDetails.idCliente != null) {
       const pedidoRef = db
         .collection("usuarios")
         .doc(String(pedidoDetails.idCliente))
         .collection("pedidos")
-        .doc(pedidoId);
+        .doc(idPedido);
 
       try {
         const docSnapshot = await pedidoRef.get();
 
         if (docSnapshot.exists) {
-          await pedidoRef.update({ status: newStatus });
+          await pedidoRef.update(newStatus);
           console.log("Document updated successfully!");
         } else {
           console.error(
@@ -110,11 +120,28 @@ const ModalsAdmin = ({
         <button className="submit" onClick={onHide}>
           Fechar
         </button>
-        <button className="submit" onClick={updatePedidoStatusInFirebase}>
+        <button
+          className="submit"
+          onClick={() =>
+            updatePedidoStatusInFirebase(
+              pedidoDetails.idPedido,
+              changePedidoStatus()
+            )
+          }
+        >
           Mudar Status
         </button>
       </Modal.Footer>
     </Modal>
+    {showConfirmationPopup && (
+        <SweetAlert
+          success
+          title="Pedido Enviado!"
+          onConfirm={hideSuccessAlert}
+        >
+          Pedido enviado com sucesso. Agradecemos pela preferência!
+        </SweetAlert>
+      )}
   );
 };
 
