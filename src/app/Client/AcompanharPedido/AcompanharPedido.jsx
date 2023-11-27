@@ -24,17 +24,18 @@ export default function AcompanharPedido() {
     setPedidoSelecionado(null);
   };
 
-  async function getPedidoStatus(status) {
-    if (pedidoSelecionado.emAberto) {
-      return (status = "Em aberto");
-    } else if (pedidoSelecionado.emAndamento) {
-      return (status = "Em andamento");
-    } else if (pedidoSelecionado.concluido) {
-      return (status = "Concluído");
+  const getPedidoStatus = (status) => {
+    if (status.emAberto) {
+      return "Em aberto";
+    } else if (status.emAndamento) {
+      return "Em andamento";
+    } else if (status.concluido) {
+      return "Concluído";
     } else {
       return null;
     }
-  }
+  };
+
   useEffect(() => {
     async function getPedidos() {
       try {
@@ -50,12 +51,13 @@ export default function AcompanharPedido() {
 
         pedidosSnapshot.forEach((doc) => {
           const dadosPedido = doc.data();
+          const status = getPedidoStatus(dadosPedido);
 
-          if (dadosPedido.emAberto) {
+          if (status === "Em aberto") {
             pedidosEmAbertoData.push(dadosPedido);
-          } else if (dadosPedido.emAndamento) {
+          } else if (status === "Em andamento") {
             pedidosEmAndamentoData.push(dadosPedido);
-          } else if (dadosPedido.concluido) {
+          } else if (status === "Concluído") {
             pedidosConcluidosData.push(dadosPedido);
           }
         });
@@ -101,9 +103,7 @@ export default function AcompanharPedido() {
                   <button
                     type="button"
                     className="text column__item__text"
-                    onClick={() => {
-                      handleShowModal();
-                    }}
+                    onClick={() => handleShowModal(pedido)}
                   >
                     Pedido {pedido.numero}
                   </button>
@@ -140,7 +140,11 @@ export default function AcompanharPedido() {
             {pedidosConcluidos.map((pedido, index) => (
               <Card className="column__item" key={index}>
                 <Card.Header>
-                  <button type="button" className="text column__item__text">
+                  <button
+                    type="button"
+                    className="text column__item__text"
+                    onClick={() => handleShowModal(pedido)}
+                  >
                     Pedido {pedido.numero}
                   </button>
                 </Card.Header>

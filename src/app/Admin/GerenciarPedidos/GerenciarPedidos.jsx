@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../../Components/Navbar/navbar";
 import { Card } from "react-bootstrap";
 import ModalsAdmin from "../../Components/Modals/ModalsAdmin";
@@ -12,7 +12,7 @@ export default function GerenciarPedidos() {
   const [lastPedidoNumber, setLastPedidoNumber] = useState(0);
 
   const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
-  const [pedidoStatus, setPedidoStatus] = useState(null);
+  const [pedidoStatus, setPedidoStatus] = useState("Em Aberto");
 
   const handleShowModal = (pedido) => {
     setPedidoSelecionado(pedido);
@@ -24,9 +24,9 @@ export default function GerenciarPedidos() {
 
   const getPedidoStatus = async (pedido) => {
     if (pedido && pedido.emAberto) {
-      return "Em aberto";
+      return "Em Aberto";
     } else if (pedido && pedido.emAndamento) {
-      return "Em andamento";
+      return "Em Andamento";
     } else if (pedido && pedido.concluido) {
       return "Concluído";
     } else {
@@ -39,11 +39,11 @@ export default function GerenciarPedidos() {
       const db = firebase.firestore();
       const pedidoRef = db
         .collection("usuarios")
-        .doc(pedidoSelecionado.idCliente) // Specify the document ID here
+        .doc(pedidoSelecionado.idCliente)
         .collection("pedidos")
         .doc(pedidoSelecionado.id);
 
-      if (newStatus === "Em andamento") {
+      if (newStatus === "Em Andamento") {
         await pedidoRef.update({
           emAberto: false,
           emAndamento: true,
@@ -120,7 +120,7 @@ export default function GerenciarPedidos() {
     const fetchStatus = async () => {
       if (pedidoSelecionado) {
         const status = await getPedidoStatus(pedidoSelecionado);
-        setPedidoStatus(status);
+        setPedidoStatus(status || "Em Aberto");
       }
     };
 
@@ -186,7 +186,7 @@ export default function GerenciarPedidos() {
                     type="button"
                     className="text column__item__text"
                     onClick={() => {
-                      handleShowModal();
+                      handleShowModal(pedido);
                     }}
                   >
                     Pedido {pedido.numero} - {pedido.cliente}

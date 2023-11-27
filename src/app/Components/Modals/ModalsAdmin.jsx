@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import Modal from "react-bootstrap/Modal";
 import firebase from "firebase";
-import { AuthContext } from "../../Auth/Context/auth";
+
 const ModalsAdmin = ({
   pedidoDetails,
   onHide,
@@ -10,25 +10,35 @@ const ModalsAdmin = ({
   cliente,
   avaliacao,
   itens,
-  status,
+  emAberto,
+  emAndamento,
+  concluido,
   changeStatus,
   ...props
 }) => {
-  const { userID } = useContext(AuthContext);
   const changePedidoStatus = () => {
     let newStatus;
-    if (status === "Em aberto") {
-      newStatus = "Em andamento";
-    } else if (status === "Em andamento") {
-      newStatus = "Concluído";
+
+    if (emAberto) {
+      newStatus = { emAndamento: true, emAberto: false, concluido: false };
+    } else if (emAndamento) {
+      newStatus = { emAndamento: false, emAberto: false, concluido: true };
     } else {
-      newStatus = null;
+      newStatus = { emAndamento: false, emAberto: false, concluido: false };
     }
 
-    changeStatus(newStatus);
+    changeStatus({ status: newStatus }); // Modificado para passar um objeto com a propriedade 'status'
+  };
 
-    if (newStatus) {
-      updatePedidoStatusInFirebase(pedidoDetails.id, newStatus);
+  const formatStatus = (status) => {
+    if (status.emAberto) {
+      return "Em Aberto";
+    } else if (status.emAndamento) {
+      return "Em Andamento";
+    } else if (status.concluido) {
+      return "Concluído";
+    } else {
+      return "Status Desconhecido";
     }
   };
 
@@ -37,37 +47,38 @@ const ModalsAdmin = ({
     return data?.toLocaleString();
   };
 
-  const updatePedidoStatusInFirebase = async (
-    pedidoId,
-    idCliente,
-    newStatus
-  ) => {
+  const updatePedidoStatusInFirebase = async (pedidoId, newStatus) => {
     const db = firebase.firestore();
-    const pedidoRef = db
-      .collection("usuarios")
-      .doc(idCliente)
-      .collection("pedidos")
-      .doc(pedidoId);
 
-    try {
-      // Get the document snapshot to check if the document exists
-      const docSnapshot = await pedidoRef.get();
+    // Add a conditional check for pedidoDetails
+    if (pedidoDetails && pedidoDetails.idCliente != null) {
+      const pedidoRef = db
+        .collection("usuarios")
+        .doc(String(pedidoDetails.idCliente))
+        .collection("pedidos")
+        .doc(pedidoId);
 
-      if (docSnapshot.exists) {
-        // Document exists, proceed with the update
-        await pedidoRef.update({ status: newStatus });
-        console.log("Document updated successfully!");
-      } else {
-        console.error(
-          "Document does not exist at the specified path:",
-          pedidoRef.path
-        );
+      try {
+        const docSnapshot = await pedidoRef.get();
+
+        if (docSnapshot.exists) {
+          await pedidoRef.update({ status: newStatus });
+          console.log("Document updated successfully!");
+        } else {
+          console.error(
+            "Document does not exist at the specified path:",
+            pedidoRef.path
+          );
+        }
+      } catch (error) {
+        console.error("Error updating document:", error);
       }
-    } catch (error) {
-      console.error("Error updating document:", error);
+    } else {
+      console.error(
+        "pedidoDetails or pedidoDetails.idCliente is null or undefined"
+      );
     }
   };
-
   return (
     <Modal size="lg" centered show={pedidoDetails !== null} onHide={onHide}>
       <Modal.Header closeButton>
@@ -85,7 +96,7 @@ const ModalsAdmin = ({
             </p>
             <p>Cliente: {cliente}</p>
             <p>Avaliação: {avaliacao}</p>
-            <p>Status: {status}</p>
+            <p>Status: {formatStatus({ emAberto, emAndamento, concluido })}</p>
             <h3>Itens do pedido:</h3>
             <p>
               {itens &&
@@ -99,7 +110,7 @@ const ModalsAdmin = ({
         <button className="submit" onClick={onHide}>
           Fechar
         </button>
-        <button className="submit" onClick={changePedidoStatus}>
+        <button className="submit" onClick={updatePedidoStatusInFirebase}>
           Mudar Status
         </button>
       </Modal.Footer>
