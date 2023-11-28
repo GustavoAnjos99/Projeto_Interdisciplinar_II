@@ -31,6 +31,7 @@
 
 .table {
     overflow: scroll;
+    max-width: 90%;
 }
 
 .ultimosPedidos__header {
@@ -41,4 +42,14 @@
 .ultimosPedidos__body {
     background-color: #FFE5DD;
     width: 95%;
+}
+
+@media screen and (max-width: 1024px) {
+    .ultimosPedidos {
+        width: 95%;
+    }
+    .table {
+        overflow: scroll;
+        max-width: 90%;
+    }
 }

@@ -61,6 +61,15 @@ function MeuPerfil() {
       }
     }
 
+    const getPedidoStatus = (status) => {
+      const db = firebase.firestore();
+      const statusRef = db
+        .collection("usuarios")
+        .doc(userID)
+        .collection("pedidos")
+        .doc();
+    };
+
     LoadUserName();
     LoadPedidos();
   }, [userID, logado, userType]);
@@ -77,8 +86,7 @@ function MeuPerfil() {
           <table className="table ultimosPedidos__body">
             <thead>
               <tr>
-                <th>ID do Pedido</th>
-                <th>Itens do Pedido</th>
+                <th>Número do Pedido</th>
                 <th>Data do Pedido</th>
                 <th>Status do Pedido</th>
               </tr>
@@ -86,13 +94,7 @@ function MeuPerfil() {
             <tbody>
               {pedidos.map((pedido) => (
                 <tr key={pedido.id}>
-                  <td>{pedido.id}</td>
-                  <td>
-                    {Array.isArray(pedido.itens)
-                      ? pedido.itens.join(", ")
-                      : "Nenhum item"}
-                  </td>
-
+                  <td>{pedido.numero}</td>
                   <td>{pedido.dataPedido}</td>
                   <td>{pedido.status}</td>
                 </tr>
