@@ -65,9 +65,6 @@ function NovaConta() {
                   dataPedido: new Date(),
                   numero: 0,
                 })
-                .then((pedidoDocRef) => {
-                  pedidoDocRef.delete();
-                })
                 .catch((e) => {
                   console.error("Algo deu errado: ", e);
                 });

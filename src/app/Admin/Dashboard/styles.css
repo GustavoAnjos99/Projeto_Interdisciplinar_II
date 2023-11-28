@@ -2,11 +2,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 95%;
+    width: 100%;
 }
 
 .card-frame {
     left: 10%;
+    height: 25%;
     background-color: #FFF0EB;
 }
 
@@ -23,7 +24,16 @@
 
 .iframe {
     width: 100%;
-    height: auto;
+    height: 100%;
+    margin: auto;
+}
+
+.graficos {
+    height: 90%;
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .intro-cards {

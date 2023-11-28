@@ -11,6 +11,7 @@ export default function GerenciarPedidos() {
   const [pedidosEmAndamento, setPedidosEmAndamento] = useState([]);
   const [pedidosConcluidos, setPedidosConcluidos] = useState([]);
   const [lastPedidoNumber, setLastPedidoNumber] = useState(0);
+  const [pedidosCancelados, setPedidosCancelados] = useState([]);
   const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
   const [pedidoStatus, setPedidoStatus] = useState("Em Aberto");
   const [loading, setLoading] = useState(true);
@@ -201,6 +202,28 @@ export default function GerenciarPedidos() {
               </Card.Header>
               <Card.Body>
                 {filterPedidos(pedidosConcluidos).map((pedido, index) => (
+                  <Card className="column__item" key={index}>
+                    <Card.Header>
+                      <button
+                        type="button"
+                        className="text column__item__text"
+                        onClick={() => {
+                          handleShowModal(pedido);
+                        }}
+                      >
+                        Pedido {pedido.numero} - {pedido.cliente}
+                      </button>
+                    </Card.Header>
+                  </Card>
+                ))}
+              </Card.Body>
+            </Card>
+            <Card className="column">
+              <Card.Header className="text heading ">
+                Pedidos Cancelados
+              </Card.Header>
+              <Card.Body>
+                {filterPedidos(pedidosCancelados).map((pedido, index) => (
                   <Card className="column__item" key={index}>
                     <Card.Header>
                       <button

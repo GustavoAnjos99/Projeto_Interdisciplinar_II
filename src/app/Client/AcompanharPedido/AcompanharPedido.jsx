@@ -5,15 +5,18 @@ import firebase from "../../Config/firebase";
 import Modals from "../../Components/Modals/Modals";
 import "./styles.css";
 import { AuthContext } from "../../Auth/Context/auth";
+import SpinningCircles from "react-loading-icons/dist/esm/components/spinning-circles";
 
 export default function AcompanharPedido() {
   const [pedidosEmAberto, setPedidosEmAberto] = useState([]);
   const [pedidosEmAndamento, setPedidosEmAndamento] = useState([]);
   const [pedidosConcluidos, setPedidosConcluidos] = useState([]);
+  const [pedidosCancelados, setPedidosCancelados] = useState([]);
   const [lastPedidoNumber, setLastPedidoNumber] = useState(0);
   const { userID } = useContext(AuthContext);
   const [showModal, setShowModal] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [pedidoStatus, setPedidoStatus] = useState("Em Aberto");
   const [pedidoSelecionado, setPedidoSelecionado] = useState(null);
 
   const handleShowModal = (pedido) => {
@@ -31,9 +34,14 @@ export default function AcompanharPedido() {
       return "Em andamento";
     } else if (status.concluido) {
       return "Concluído";
+    } else if (status.cancelado) {
+      return "Cancelado";
     } else {
       return null;
     }
+  };
+  const filterPedidos = (pedidos) => {
+    return pedidos.filter((pedido) => pedido.numero !== 0);
   };
 
   useEffect(() => {
@@ -65,6 +73,7 @@ export default function AcompanharPedido() {
         setPedidosEmAberto(pedidosEmAbertoData);
         setPedidosEmAndamento(pedidosEmAndamentoData);
         setPedidosConcluidos(pedidosConcluidosData);
+        setLoading(false);
       } catch (error) {
         console.error("Erro ao obter pedidos:", error);
       }
@@ -94,66 +103,108 @@ export default function AcompanharPedido() {
         Acompanhamento de Pedidos
       </h1>
       <div className="card__container">
-        <Card className="column">
-          <Card.Header className="text heading">Pedidos em Aberto</Card.Header>
-          <Card.Body>
-            {pedidosEmAberto.map((pedido, index) => (
-              <Card className="column__item" key={index}>
-                <Card.Header>
-                  <button
-                    type="button"
-                    className="text column__item__text"
-                    onClick={() => handleShowModal(pedido)}
-                  >
-                    Pedido {pedido.numero}
-                  </button>
-                </Card.Header>
-              </Card>
-            ))}
-          </Card.Body>
-        </Card>
-        <Card className="column">
-          <Card.Header className="text heading">
-            Pedidos em Andamento
-          </Card.Header>
-          <Card.Body>
-            {pedidosEmAndamento.map((pedido, index) => (
-              <Card className="column__item" key={index}>
-                <Card.Header>
-                  <button
-                    type="button"
-                    className="text column__item__text"
-                    onClick={() => handleShowModal(pedido)}
-                  >
-                    Pedido {pedido.numero}
-                  </button>
-                </Card.Header>
-              </Card>
-            ))}
-          </Card.Body>
-        </Card>
-        <Card className="column">
-          <Card.Header className="text heading ">
-            Pedidos Concluídos
-          </Card.Header>
-          <Card.Body>
-            {pedidosConcluidos.map((pedido, index) => (
-              <Card className="column__item" key={index}>
-                <Card.Header>
-                  <button
-                    type="button"
-                    className="text column__item__text"
-                    onClick={() => handleShowModal(pedido)}
-                  >
-                    Pedido {pedido.numero}
-                  </button>
-                </Card.Header>
-              </Card>
-            ))}
-          </Card.Body>
-        </Card>
+        {loading ? (
+          <div className="loading">
+            <SpinningCircles fill="#4C2B17" speed="0.75" />
+          </div>
+        ) : (
+          <>
+            <Card className="column">
+              <Card.Header className="text heading">
+                Pedidos em Aberto
+              </Card.Header>
+              <Card.Body>
+                {filterPedidos(pedidosEmAberto).map((pedido, index) => (
+                  <Card className="column__item" key={index}>
+                    <Card.Header>
+                      <button
+                        type="button"
+                        className="text column__item__text"
+                        onClick={() => handleShowModal(pedido)}
+                      >
+                        Pedido {pedido.numero}
+                      </button>
+                    </Card.Header>
+                  </Card>
+                ))}
+              </Card.Body>
+            </Card>
+            <Card className="column">
+              <Card.Header className="text heading">
+                Pedidos em Andamento
+              </Card.Header>
+              <Card.Body>
+                {filterPedidos(pedidosEmAndamento).map((pedido, index) => (
+                  <Card className="column__item" key={index}>
+                    <Card.Header>
+                      <button
+                        type="button"
+                        className="text column__item__text"
+                        onClick={() => handleShowModal(pedido)}
+                      >
+                        Pedido {pedido.numero}
+                      </button>
+                    </Card.Header>
+                  </Card>
+                ))}
+              </Card.Body>
+            </Card>
+            <Card className="column">
+              <Card.Header className="text heading ">
+                Pedidos Concluídos
+              </Card.Header>
+              <Card.Body>
+                {filterPedidos(pedidosConcluidos).map((pedido, index) => (
+                  <Card className="column__item" key={index}>
+                    <Card.Header>
+                      <button
+                        type="button"
+                        className="text column__item__text"
+                        onClick={() => handleShowModal(pedido)}
+                      >
+                        Pedido {pedido.numero}
+                      </button>
+                    </Card.Header>
+                  </Card>
+                ))}
+              </Card.Body>
+            </Card>
+            <Card className="column">
+              <Card.Header className="text heading ">
+                Pedidos Cancelados
+              </Card.Header>
+              <Card.Body>
+                {pedidosCancelados.map((pedido, index) => (
+                  <Card className="column__item" key={index}>
+                    <Card.Header>
+                      <button
+                        type="button"
+                        className="text column__item__text"
+                        onClick={() => handleShowModal(pedido)}
+                      >
+                        Pedido {pedido.numero}
+                      </button>
+                    </Card.Header>
+                  </Card>
+                ))}
+              </Card.Body>
+            </Card>
+          </>
+        )}
       </div>
-      <Modals pedidoDetails={pedidoSelecionado} onHide={handleHideModal} />
+      {pedidoSelecionado ? (
+        <Modals
+          numero={pedidoSelecionado.numero}
+          pedidoDetails={pedidoSelecionado}
+          cliente={pedidoSelecionado?.cliente}
+          avaliacao={pedidoSelecionado?.avaliacao}
+          itens={pedidoSelecionado?.itensQuantidades}
+          dataPedido={pedidoSelecionado?.dataPedido}
+          idPedido={pedidoSelecionado.idPedido}
+          status={pedidoStatus}
+          onHide={handleHideModal}
+        />
+      ) : null}
     </>
   );
 }

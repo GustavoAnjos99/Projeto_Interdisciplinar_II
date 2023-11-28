@@ -55,10 +55,10 @@ export const Dashboard = () => {
               <div className="col">
                 <div className="card card-frame h-100">
                   <CustomIframe title="Gráfico de Pedidos" className="iframe">
-                    <GraficoPedidos />
+                    <GraficoPedidos className="graficos" />
                   </CustomIframe>
                   <div className="card-header">
-                    <h5 className="card-title">Últimos negócios feitos</h5>
+                    <h5 className="card-title">Pedidos nos Últimos 30 dias</h5>
                   </div>
                 </div>
               </div>
@@ -66,12 +66,12 @@ export const Dashboard = () => {
               <div className="col">
                 <div className="card card-frame h-100">
                   <div>
-                    <CustomIframe>
-                      <GraficoPedidos />
+                    <CustomIframe title="Gráfico de Vendas" className="iframe">
+                      <Tabela className="graficos" />
                     </CustomIframe>
                   </div>
                   <div className="card-body">
-                    <h5 className="card-header">Tabela de vendas</h5>
+                    <h5 className="card-title">Gráfico de vendas</h5>
                   </div>
                 </div>
               </div>

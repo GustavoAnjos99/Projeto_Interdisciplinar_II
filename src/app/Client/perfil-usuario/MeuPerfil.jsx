@@ -30,7 +30,7 @@ function MeuPerfil() {
 
     async function LoadPedidos() {
       try {
-        if (logado && userType === "cliente") {
+        if (logado && userType === "cliente" && userID) {
           const db = firebase.firestore();
           const usuariosRef = db.collection("usuarios");
           const userRef = usuariosRef.doc(userID);
@@ -42,11 +42,18 @@ function MeuPerfil() {
             .get();
           const pedidosData = querySnapshot.docs.map((doc) => {
             const data = doc.data();
+            let status;
+            if (data) {
+              status = getPedidoStatus(data);
+            } else {
+              console.log("data é undefined");
+            }
             return {
               id: doc.id,
               ...data,
+              status,
               dataPedido:
-                data.dataPedido && data.dataPedido.toDate
+                data && data.dataPedido && data.dataPedido.toDate
                   ? data.dataPedido.toDate().toLocaleString()
                   : null,
             };
@@ -61,17 +68,42 @@ function MeuPerfil() {
       }
     }
 
-    const getPedidoStatus = (status) => {
-      const db = firebase.firestore();
-      const statusRef = db
-        .collection("usuarios")
-        .doc(userID)
-        .collection("pedidos")
-        .doc();
+    const getPedidoStatus = (data) => {
+      if (
+        data.emAberto === true &&
+        data.emAndamento === false &&
+        data.concluido === false &&
+        data.cancelado === false
+      ) {
+        return "Em Aberto";
+      } else if (
+        data.emAndamento === true &&
+        data.emAberto === false &&
+        data.concluido === false &&
+        data.cancelado === false
+      ) {
+        return "Em Andamento";
+      } else if (
+        data.concluido === true &&
+        data.emAberto === false &&
+        data.emAndamento === false &&
+        data.cancelado === false
+      ) {
+        return "Concluído";
+      } else if (
+        data.cancelado === true &&
+        data.emAberto === false &&
+        data.emAndamento === false &&
+        data.concluido === false
+      ) {
+        return "Cancelado";
+      } else {
+        return "Erro";
+      }
     };
-
     LoadUserName();
     LoadPedidos();
+    getPedidoStatus();
   }, [userID, logado, userType]);
 
   return (
@@ -96,7 +128,7 @@ function MeuPerfil() {
                 <tr key={pedido.id}>
                   <td>{pedido.numero}</td>
                   <td>{pedido.dataPedido}</td>
-                  <td>{pedido.status}</td>
+                  <td>{pedido.getPedidoStatus}</td>
                 </tr>
               ))}
             </tbody>

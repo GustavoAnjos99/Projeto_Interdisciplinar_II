@@ -13,10 +13,10 @@ import EditarCliente from "./app/Admin/CRUD/EditarCliente/editarcliente.jsx";
 import MeuPerfil from "./app/Client/perfil-usuario/MeuPerfil.jsx";
 import { Dashboard } from "./app/Admin/Dashboard/Dashboard.jsx";
 import GerenciarPedidos from "./app/Admin/GerenciarPedidos/GerenciarPedidos.jsx";
-import Avaliacoes from "./app/Client/Avaliacoes/avaliacoes.jsx";
 import Ajuda from "./app/Ajuda/Ajuda.jsx";
 import AcompanharPedido from "./app/Client/AcompanharPedido/AcompanharPedido.jsx";
 import PedidoForm from "./app/Client/PedidoForm/PedidoForm.jsx";
+import Avaliacao from "./app/Client/Avaliacoes/Avaliacao.jsx";
 function App() {
   return (
     <BrowserRouter>
@@ -26,7 +26,7 @@ function App() {
         <Route exact path="/app/novaconta" component={NovaConta} />
         <Route exact path="/app/resetsenha" component={ResetSenha} />
         <Route exact path="/app/ajuda" component={Ajuda} />
-
+        <Route exact path="/app/novo-pedido" component={PedidoForm}></Route>
         <SecureRoute
           exact
           path="/app/admin/home"
@@ -67,12 +67,6 @@ function App() {
         />
         <SecureRoute
           exact
-          path="/app/novo-pedido"
-          component={PedidoForm}
-          allowedUserType="cliente"
-        />
-        <SecureRoute
-          exact
           path="/app/acompanhar-pedidos"
           component={AcompanharPedido}
           allowedUserType="cliente"
@@ -80,7 +74,7 @@ function App() {
         <SecureRoute
           exact
           path="/app/avaliar-pedidos"
-          component={Avaliacoes}
+          component={Avaliacao}
           allowedUserType="cliente"
         />
       </Switch>

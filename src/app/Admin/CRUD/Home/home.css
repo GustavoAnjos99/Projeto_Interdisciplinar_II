@@ -34,8 +34,23 @@
   border: 1px solid #f1b5a0;
 }
 
-.cont table {
+.cont table.table {
+  width: 95%;
+  margin: auto;
   overflow-y: scroll;
   scroll-behavior: smooth;
   height: 60vh;
+  overflow-x: scroll;
+}
+
+@media screen and (max-width: 1024px) {
+  .cont table.table {
+    width: 100%;
+    margin: auto;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    height: 60vh;
+    overflow-x: scroll;
+  }
+  
 }
